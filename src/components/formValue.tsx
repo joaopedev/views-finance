@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -7,47 +7,90 @@ import {
   VStack,
   Box,
   Select,
+  Text,
 } from "@chakra-ui/react";
+import { useAuth } from "../context/authContext";
 
-export const FormValue: React.FC = () => {
+const FormValue: React.FC = () => {
+  const { totalEarnings } = useAuth();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("");
+
+  const [accountNumber, setAccountNumber] = useState<string>("");
+
+  const handleAccountNumberChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setAccountNumber(event.target.value);
+  };
+
+  const handlePaymentMethodChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedPaymentMethod(event.target.value);
+  };
+
   return (
     <Box p={6} rounded="md">
       <VStack>
-        <FormLabel mb={5}>Request Withdrawal</FormLabel>
-      </VStack>
-      <VStack mt={8}>
         <FormControl justifyContent="space-between">
           <VStack>
             <FormLabel mt={4} mb={5}>
-              Value:
+              Total Earnings: $ {totalEarnings}
             </FormLabel>
-          </VStack>
-          <VStack>
-            <Input mt={1} type="email" placeholder="R$" />
           </VStack>
           <VStack>
             <FormLabel mt={4} mb={5}>
-             Select PIX key:
+              Select your payment method
             </FormLabel>
           </VStack>
           <VStack>
-            <Select>
-              <option value="option1">Email</option>
-              <option value="option2">CPF</option>
-              <option value="option3">Telefone</option>
+            <Select mt={4} onChange={handlePaymentMethodChange}>
+              <option value="paypal">PayPal</option>
+              <option value="wise">Wise</option>
+              <option value="skrill">Skrill</option>
+              <option value="bankTransfer">Direct Bank Transfers</option>
             </Select>
           </VStack>
           <VStack>
             <FormLabel mt={4} mb={5}>
-              PIX key:
+              Enter your account:
             </FormLabel>
           </VStack>
           <VStack>
-            <Input mt={5} placeholder="Share your pix key" />
+            {/* Input condicional com base no método de pagamento selecionado */}
+            {selectedPaymentMethod === "paypal" && (
+              <Input
+                mt={2}
+                placeholder="Enter your PayPal email"
+                onChange={handleAccountNumberChange}
+              />
+            )}
+            {selectedPaymentMethod === "wise" && (
+              <Input
+                mt={2}
+                placeholder="Enter your Wise account number"
+                onChange={handleAccountNumberChange}
+              />
+            )}
+            {selectedPaymentMethod === "skrill" && (
+              <Input
+                mt={2}
+                placeholder="Enter your Skrill email"
+                onChange={handleAccountNumberChange}
+              />
+            )}
+            {selectedPaymentMethod === "bankTransfer" && (
+              <Input
+                mt={2}
+                placeholder="Enter your bank account number"
+                onChange={handleAccountNumberChange}
+              />
+            )}
           </VStack>
           <VStack mt={6} mb={3}>
             <Button marginTop={6} backgroundColor="#BFA4A4">
-              Request Withdrawal
+              Send!
             </Button>
           </VStack>
         </FormControl>
