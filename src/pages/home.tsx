@@ -14,32 +14,75 @@ import {
   Text,
   VStack,
   Heading,
+  Button,
+  Grid,
+  Link,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import image from "../images/logo.jpg";
 import VideoCards from "../components/videoCards";
-import Footer from "../components/footer";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
+import FormValue from "../components/formValue";
+import { FaHome, FaStar } from "react-icons/fa";
 
 export const Home: React.FC = () => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM dd", { locale: enUS });
-  const { dailyGoalProgress, isAuthenticated, emailLogin, login } = useAuth();
+  const {
+    dailyGoalProgress,
+    totalEarnings,
+    claimBonus,
+    bonusClaimed,
+    emailLogin,
+    showForm,
+    setShowForm,
+  } = useAuth();
+  const formRef = useRef<HTMLDivElement>(null);
+  const [showParabensModal, setShowParabensModal] = useState(true);
+
+  const handleButtonClick = () => {
+    setShowForm(true);
+  };
+
+  const handleCloseParabensModal = () => {
+    setShowParabensModal(false);
+  };
 
   useEffect(() => {
-    // Use o email do contexto se o usuário estiver autenticado
-    if (!isAuthenticated) {
-      console.log(`E-mail do usuário: ${emailLogin}`);
-    } else {
-      // Se não estiver autenticado, faça login (substitua com sua lógica real)
-      login("seu@email.com");
+    if (showForm && formRef.current) {
+      formRef.current.scrollIntoView({
+        behavior: "smooth",
+      });
     }
-  }, [isAuthenticated, login, emailLogin]);
+  }, [showForm]);
 
   return (
     <Box background="#BFA4A4" minHeight="100vh" overflowX="hidden">
+      <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Congratulations!</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>You won ${totalEarnings} dollars!</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={handleCloseParabensModal}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Box
         borderWidth="1px"
         borderRadius="10px"
@@ -53,16 +96,9 @@ export const Home: React.FC = () => {
           <Wrap>
             <WrapItem>
               <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                <Avatar name="Segun Adebayo" src={image} />
-
+                <Avatar name="Secret Tool" src={image} />
                 <Box>
-                  <Heading size="sm">
-                    {isAuthenticated ? (
-                      <span>{emailLogin}</span>
-                    ) : (
-                      <span>Visitante</span>
-                    )}
-                  </Heading>
+                  <Heading size="sm">Welcome! {emailLogin}</Heading>
                 </Box>
               </Flex>
             </WrapItem>
@@ -71,7 +107,7 @@ export const Home: React.FC = () => {
           <Box>
             <Stat>
               <StatLabel>Collected</StatLabel>
-              <StatNumber>$ 300.00</StatNumber>
+              <StatNumber>$ {totalEarnings}</StatNumber>
               <StatHelpText>{formattedDate}</StatHelpText>
             </Stat>
           </Box>
@@ -107,9 +143,17 @@ export const Home: React.FC = () => {
         >
           <Stack backgroundColor="#BFA4A4" spacing={5}>
             <VStack>
-              <Text color="white" fontSize="sm" fontWeight="bold">
-                Reach 100% and get a bonus of R$ 10.00
-              </Text>
+              <Button
+                backgroundColor="#BFA4A4"
+                fontSize="sm"
+                fontWeight="bold"
+                onClick={claimBonus}
+                isDisabled={bonusClaimed}
+              >
+                {bonusClaimed
+                  ? "Bonus claimed!"
+                  : "Reach 100% and get a bonus of $10.0"}
+              </Button>
             </VStack>
           </Stack>
         </Box>
@@ -126,7 +170,7 @@ export const Home: React.FC = () => {
           >
             <Stack spacing={5}>
               <Text color="BFA4A4" fontSize="sm" fontWeight="bold">
-                My balance $ 300.00
+                My balance $ {totalEarnings}
               </Text>
             </Stack>
           </Box>
@@ -148,12 +192,50 @@ export const Home: React.FC = () => {
             bg="white"
             boxShadow="md"
           >
-            <VideoCards />
+            <VStack>
+              <VideoCards />
+            </VStack>
           </Box>
         </VStack>
       </Box>
 
-      <Footer />
+      <Box backgroundColor="#BFA4A4" mt={6} p={4} m={2}>
+        <Grid templateColumns="repeat(3, 1fr)" gap={3}>
+          <VStack>
+            <Link>
+              <FaHome />
+            </Link>
+          </VStack>
+          <VStack>
+            <Button onClick={handleButtonClick} backgroundColor="#BFA4A4">
+              Request Withdrawal
+            </Button>
+          </VStack>
+          <VStack>
+            <Link>
+              <FaStar />
+            </Link>
+          </VStack>
+        </Grid>
+      </Box>
+
+      {showForm && (
+        <VStack mb={10}>
+          <Box
+            width="50%"
+            borderRadius="10px"
+            boxShadow="md"
+            bg="white"
+            ref={formRef}
+            display={showForm ? "block" : "none"}
+          >
+            {" "}
+            <FormValue />{" "}
+          </Box>
+        </VStack>
+      )}
     </Box>
   );
 };
+
+export default Home;

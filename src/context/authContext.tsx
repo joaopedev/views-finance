@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -7,7 +7,16 @@ interface AuthContextType {
   login: (email: string) => void;
   logout: () => void;
   updateDailyGoalProgress: () => void;
+  videoEarning?: number | undefined,
+  setVideoEarning: React.Dispatch<React.SetStateAction<number>>,
+  totalEarnings: number;
+  updateTotalEarnings: (earning: number) => void;
+  claimBonus: () => void;
+  bonusClaimed: boolean;
   emailLogin: string | undefined;
+  showForm: boolean;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  requestWithdrawal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,15 +38,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [watchedVideos, setWatchedVideos] = useState<string[]>([]);
   const [dailyGoalProgress, setDailyGoalProgress] = useState(0);
   const [emailLogin, setemailLogin] = useState<string | undefined>(undefined);
+  const [videoEarning, setVideoEarning] = useState<number>(0);
+  const [totalEarnings, setTotalEarnings] = useState<number>(300);
+  const [bonusClaimed, setBonusClaimed] = useState(false);
+  const [showForm, setShowForm] = useState(false); 
 
+  const claimBonus = () => {
+    if (!bonusClaimed) {
+      setTotalEarnings((prevTotal) => prevTotal + 10);
+      setBonusClaimed(true);
+    }
+  };
+  const updateTotalEarnings = (earning: number) => {
+    setTotalEarnings((prevTotal) => prevTotal + earning);
+  };
 
-  const login = (email: string) => {
+  const login =  (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (emailRegex.test(email)) {
       setIsAuthenticated(true);
       setemailLogin(email);
-      console.log(email)
       return email;
     } else {
       console.log("E-mail inválido");
@@ -45,13 +66,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-
   const logout = () => {
     setIsAuthenticated(false);
   };
 
   const updateDailyGoalProgress = () => {
-    setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 25, 100));
+    setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 12.5, 100));
+  };
+
+  const requestWithdrawal = () => {
+    // Lógica para solicitar a retirada
+    // Pode ser adicionada aqui ou em uma função separada
+    // Dependendo de como você deseja estruturar o código
   };
 
   return (
@@ -63,7 +89,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logout,
         dailyGoalProgress,
         updateDailyGoalProgress,
+        videoEarning,
+        setVideoEarning,
+        totalEarnings,
+        updateTotalEarnings,
+        claimBonus,
+        bonusClaimed,
         emailLogin,
+        showForm,
+        setShowForm,
+        requestWithdrawal
       }}
     >
       {children}
