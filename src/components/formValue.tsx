@@ -6,8 +6,7 @@ import {
   Input,
   VStack,
   Box,
-  Select,
-  Text,
+  Select
 } from "@chakra-ui/react";
 import { useAuth } from "../context/authContext";
 
@@ -58,7 +57,6 @@ const FormValue: React.FC = () => {
             </FormLabel>
           </VStack>
           <VStack>
-            {/* Input condicional com base no método de pagamento selecionado */}
             {selectedPaymentMethod === "paypal" && (
               <Input
                 mt={2}
