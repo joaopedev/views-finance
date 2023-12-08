@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  watchedVideos: string[];
   dailyGoalProgress: number;
   login: (email: string) => void;
   logout: () => void;
@@ -35,7 +34,6 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [watchedVideos, setWatchedVideos] = useState<string[]>([]);
   const [dailyGoalProgress, setDailyGoalProgress] = useState(0);
   const [emailLogin, setemailLogin] = useState<string | undefined>(undefined);
   const [videoEarning, setVideoEarning] = useState<number>(0);
@@ -78,16 +76,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const requestWithdrawal = () => {
-    // Lógica para solicitar a retirada
-    // Pode ser adicionada aqui ou em uma função separada
-    // Dependendo de como você deseja estruturar o código
   };
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        watchedVideos,
         login,
         logout,
         dailyGoalProgress,

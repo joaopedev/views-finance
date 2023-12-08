@@ -20,6 +20,7 @@ const FormValue: React.FC = () => {
   const handleAccountNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    console.log(accountNumber)
     setAccountNumber(event.target.value);
   };
 
