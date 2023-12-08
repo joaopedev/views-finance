@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -50,7 +50,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
   const updateTotalEarnings = (earning: number) => {
-    setTotalEarnings((prevTotal) => prevTotal + earning);
+    setTotalEarnings((prevTotal) => {
+      const newTotal = Number((prevTotal + earning).toFixed(2));
+      return newTotal;
+    });
   };
 
   const login =  (email: string) => {

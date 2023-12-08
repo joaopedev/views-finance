@@ -9,6 +9,8 @@ const VideoCards: React.FC = () => {
   const vimeoVideoSports = 255804519;
   const vimeoVideoExperimental = 260342086;
   const vimeoVideoMusicianRapper = 346787418;
+  const vimeoVideoMusicianExperimental2 = 168232487;
+  const vimeoVideoMusicianExperimental3 = 157221452;
 
   return (
     <VStack>
@@ -44,6 +46,18 @@ const VideoCards: React.FC = () => {
         <GridItem mt={2} mb={3}>
           <Box>
             <VimeoPlayer videoId={Number(vimeoVideoMusicianRapper)} />
+          </Box>
+        </GridItem>
+
+        <GridItem mt={2} mb={3}>
+          <Box>
+            <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental2)} />
+          </Box>
+        </GridItem>
+
+        <GridItem mt={2} mb={3}>
+          <Box>
+            <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental3)} />
           </Box>
         </GridItem>
       </Grid>

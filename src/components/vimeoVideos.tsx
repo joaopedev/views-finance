@@ -41,32 +41,42 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId }) => {
   const [hasUpdatedProgress, setHasUpdatedProgress] = useState(false);
 
   useEffect(() => {
-    const player = new Vimeo(playerRef.current!, {
-      id: videoId,
-      width: 640,
-    });
+    let player: any;
 
     const handleVideoEnd = () => {
-      player.getDuration().then((duration) => {
-        const earning = calculateVideoEarning(duration / 60);
-        setVideoEarning(earning !== undefined ? earning : 0);
-        updateTotalEarnings(earning);
-        updateDailyGoalProgress();
-        setHasUpdatedProgress(true);
-      });
+      if (!hasUpdatedProgress) {
+        player.getDuration().then((duration: number) => {
+          const earning = calculateVideoEarning(duration / 60);
+          setVideoEarning(earning !== undefined ? earning : 0);
+          updateTotalEarnings(earning);
+          updateDailyGoalProgress();
+          setHasUpdatedProgress(true);
+        });
+      }
     };
 
-    player.on("ended", handleVideoEnd);
-    player.getDuration();
+    if (playerRef.current) {
+      player = new Vimeo(playerRef.current, {
+        id: videoId,
+        width: 640,
+      });
+
+      player.on("ended", handleVideoEnd);
+      player.getDuration();
+    }
 
     return () => {
-      player.off("ended");
+      if (player) {
+        player.off("ended");
+      }
     };
   }, [
     videoId,
     updateDailyGoalProgress,
     setHasUpdatedProgress,
     setVideoEarning,
+    updateTotalEarnings,
+    hasUpdatedProgress,
   ]);
 
   return (
