@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -9,14 +9,15 @@ import {
   Select
 } from "@chakra-ui/react";
 import { useAuth } from "../context/authContext";
+import { useLocation } from "react-router-dom";
 
 const FormValue: React.FC = () => {
-  const { totalEarnings } = useAuth();
+  const { totalEarnings, updateTotalEarnings } = useAuth();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("");
-
+  const location = useLocation();
   const [accountNumber, setAccountNumber] = useState<string>("");
-
+  const [initialTotalEarnings, setInitialTotalEarnings] = useState<number | undefined>(undefined);
   const handleAccountNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -30,13 +31,20 @@ const FormValue: React.FC = () => {
     setSelectedPaymentMethod(event.target.value);
   };
 
+  useEffect(() => {
+    if (location.state && location.state.totalEarnings !== undefined) {
+      setInitialTotalEarnings(location.state.totalEarnings);
+      updateTotalEarnings(location.state.totalEarnings);
+    }
+  }, [location.state, updateTotalEarnings]);
+
   return (
     <Box p={6} rounded="md">
       <VStack>
         <FormControl justifyContent="space-between">
           <VStack>
             <FormLabel mt={4} mb={5}>
-              Total Earnings: $ {totalEarnings}
+            Total Earnings: $ {initialTotalEarnings !== undefined ? initialTotalEarnings : totalEarnings}
             </FormLabel>
           </VStack>
           <VStack>

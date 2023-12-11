@@ -58,7 +58,7 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId }) => {
     if (playerRef.current) {
       player = new Vimeo(playerRef.current, {
         id: videoId,
-        width: 640,
+        width: 320,
       });
 
       player.on("ended", handleVideoEnd);
@@ -79,11 +79,7 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId }) => {
     hasUpdatedProgress,
   ]);
 
-  return (
-    <Box>
-      <Box ref={playerRef} />
-    </Box>
-  );
+  return <Box ref={playerRef} />;
 };
 
 export default VimeoPlayer;

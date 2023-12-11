@@ -8,13 +8,11 @@ export const RequestValue: React.FC = () => {
   return (
     <Grid backgroundColor="#BFA4A4" templateColumns="repeat(3, 1fr)" gap={2}>
       <GridItem backgroundColor="#BFA4A4" colSpan={1} p={4}>
-      <Box
-  
-        >
-        <Link to="/home">
-          <ArrowBackIcon />
-        </Link>
-      </Box>  
+        <Box>
+          <Link to="/home">
+            <ArrowBackIcon />
+          </Link>
+        </Box>
       </GridItem>
       <GridItem backgroundColor="#BFA4A4" h="100vh" colSpan={1} p={4}>
         <Box
