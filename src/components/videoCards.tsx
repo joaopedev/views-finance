@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import VimeoPlayer from "./vimeoVideos";
 
 const VideoCards: React.FC = () => {
