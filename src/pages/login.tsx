@@ -1,20 +1,27 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
 import LoginForm from "../components/loginForm";
 import { AuthProvider } from "../context/authContext";
 
 export const Login: React.FC = () => {
+  const boxWidth = useBreakpointValue({ base: "90%", md: "70vw", lg: "60vw" });
+
   return (
-    <Grid backgroundColor="#BFA4A4" templateColumns="repeat(3, 1fr)" gap={2}>
-      <GridItem backgroundColor="#BFA4A4" colSpan={1} p={4}></GridItem>
-        <GridItem backgroundColor="#BFA4A4" h="105vh" colSpan={1} p={4}>
-            <Box marginTop="20%" boxShadow='dark-lg' background="white" marginBottom="60%" w="100%" p={15}>
-              <AuthProvider>
-                <LoginForm />
-              </AuthProvider>
-            </Box>
-        </GridItem>
-      <GridItem backgroundColor="#BFA4A4" colSpan={1} p={4} />
-    </Grid>
+    <Box backgroundColor="#BFA4A4" height="100vh">
+      <Flex
+        backgroundColor="#BFA4A4"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <VStack spacing={12}>
+          <Box boxShadow="dark-lg" background="white" width={boxWidth} p={15}>
+            <AuthProvider>
+              <LoginForm />
+            </AuthProvider>
+          </Box>
+        </VStack>
+      </Flex>
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { AuthProvider } from "../context/authContext";
 import FormValue from "../components/formValue";
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -6,30 +6,32 @@ import { Link } from "react-router-dom";
 
 export const RequestValue: React.FC = () => {
   return (
-    <Grid backgroundColor="#BFA4A4" templateColumns="repeat(3, 1fr)" gap={2}>
-      <GridItem backgroundColor="#BFA4A4" colSpan={1} p={4}>
-        <Box>
-          <Link to="/home">
-            <ArrowBackIcon />
-          </Link>
+    <Box backgroundColor="#BFA4A4">
+      <Link to="/home">
+        <Box p={4}>
+          <ArrowBackIcon />
         </Box>
-      </GridItem>
-      <GridItem backgroundColor="#BFA4A4" h="100vh" colSpan={1} p={4}>
+      </Link>
+      <Flex
+        backgroundColor="#BFA4A4"
+        height="95vh"
+        alignItems="center"
+        justifyContent="center"
+      >
         <Box
-          marginTop="20%"
+          marginTop="10%"
           boxShadow="dark-lg"
           background="white"
-          marginBottom="60%"
-          w="100%"
+          marginBottom="10%"
+          w="70%"
           p={15}
         >
           <AuthProvider>
             <FormValue />
           </AuthProvider>
         </Box>
-      </GridItem>
-      <GridItem backgroundColor="#BFA4A4" colSpan={1} p={2} />
-    </Grid>
+      </Flex>
+    </Box>
   );
 };
 
