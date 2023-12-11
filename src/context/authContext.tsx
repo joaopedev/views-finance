@@ -47,6 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setBonusClaimed(true);
     }
   };
+  
   const updateTotalEarnings = (earning: number) => {
     setTotalEarnings((prevTotal) => {
       const newTotal = Number((prevTotal + earning).toFixed(2));
@@ -72,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const updateDailyGoalProgress = () => {
-    setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 12.5, 100));
+    setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 10, 100));
   };
 
   const requestWithdrawal = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, GridItem, VStack } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import VimeoPlayer from "./vimeoVideos";
 
 const VideoCards: React.FC = () => {
@@ -11,57 +11,22 @@ const VideoCards: React.FC = () => {
   const vimeoVideoMusicianRapper = 346787418;
   const vimeoVideoMusicianExperimental2 = 168232487;
   const vimeoVideoMusicianExperimental3 = 157221452;
+  const vimeoVideoMusicianExperimental4 = 892389795; 
+  const vimeoVideoMusicianExperimental5 = 888939361; 
 
   return (
-    <VStack>
-      <Grid mt={8} templateColumns={{ base: "1fr", md: "1.1fr 1fr" }} gap={4}>
-        <GridItem>
-          <VimeoPlayer videoId={Number(vimeoVideoPrimeiroExperimental)} />
-        </GridItem>
-
-        <GridItem mt={2}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoIdAnimation)} />
-          </Box>
-        </GridItem>
-
-        <GridItem mt={2}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoMusician)} />
-          </Box>
-        </GridItem>
-
-        <GridItem mt={2}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoSports)} />
-          </Box>
-        </GridItem>
-
-        <GridItem mt={2}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoExperimental)} />
-          </Box>
-        </GridItem>
-
-        <GridItem mt={2} mb={3}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoMusicianRapper)} />
-          </Box>
-        </GridItem>
-
-        <GridItem mt={2} mb={3}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental2)} />
-          </Box>
-        </GridItem>
-
-        <GridItem mt={2} mb={3}>
-          <Box>
-            <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental3)} />
-          </Box>
-        </GridItem>
-      </Grid>
-    </VStack>
+<Flex mt={8} direction={{ base: "column", md: "row" }} flexWrap="wrap" justify="center" align="center" gap={4}>
+  <VimeoPlayer videoId={Number(vimeoVideoPrimeiroExperimental)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoIdAnimation)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoMusician)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoSports)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoExperimental)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoMusicianRapper)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental2)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental3)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental4)}  />
+  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental5)}  />
+</Flex>
   );
 };
 

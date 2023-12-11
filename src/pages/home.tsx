@@ -25,14 +25,14 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import image from "../images/logo.jpg";
 import VideoCards from "../components/videoCards";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
-import FormValue from "../components/formValue";
 import { FaHome, FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export const Home: React.FC = () => {
   const currentDate = new Date();
@@ -43,27 +43,15 @@ export const Home: React.FC = () => {
     claimBonus,
     bonusClaimed,
     emailLogin,
-    showForm,
-    setShowForm,
   } = useAuth();
-  const formRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [showParabensModal, setShowParabensModal] = useState(true);
-
   const handleButtonClick = () => {
-    setShowForm(true);
+    navigate("/requestValue", { state: { totalEarnings } });
   };
-
   const handleCloseParabensModal = () => {
     setShowParabensModal(false);
   };
-
-  useEffect(() => {
-    if (showForm && formRef.current) {
-      formRef.current.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
-  }, [showForm]);
 
   return (
     <Box background="#BFA4A4" minHeight="100vh" overflowX="hidden">
@@ -188,13 +176,10 @@ export const Home: React.FC = () => {
             borderRadius="10px"
             borderColor="gray.300"
             p={4}
-            m={2}
             bg="white"
             boxShadow="md"
           >
-            <VStack>
-              <VideoCards />
-            </VStack>
+            <VideoCards />
           </Box>
         </VStack>
       </Box>
@@ -207,7 +192,7 @@ export const Home: React.FC = () => {
             </Link>
           </VStack>
           <VStack>
-            <Button onClick={handleButtonClick} backgroundColor="#BFA4A4">
+            <Button backgroundColor="#BFA4A4" onClick={handleButtonClick}>
               Request Withdrawal
             </Button>
           </VStack>
@@ -218,22 +203,6 @@ export const Home: React.FC = () => {
           </VStack>
         </Grid>
       </Box>
-
-      {showForm && (
-        <VStack mb={10}>
-          <Box
-            width="50%"
-            borderRadius="10px"
-            boxShadow="md"
-            bg="white"
-            ref={formRef}
-            display={showForm ? "block" : "none"}
-          >
-            {" "}
-            <FormValue />{" "}
-          </Box>
-        </VStack>
-      )}
     </Box>
   );
 };
