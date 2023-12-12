@@ -31,7 +31,7 @@ import VideoCards from "../components/videoCards";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
-import { FaCheck, FaHome, FaStar } from "react-icons/fa";
+import { FaCheckCircle , FaHome, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export const Home: React.FC = () => {
@@ -62,8 +62,8 @@ export const Home: React.FC = () => {
             <ModalHeader mt={3}>Congratulations!</ModalHeader>
           </VStack>
           <ModalCloseButton />
-          <VStack>
-            <FaCheck style={{ marginRight: "8px" }} />
+          <VStack p={5}>
+            <FaCheckCircle color="blue" style={{ marginRight: "8px" }} />
           </VStack>
           <VStack>
             <ModalBody mt={5}>

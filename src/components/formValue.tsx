@@ -15,6 +15,13 @@ import {
   Text,
   ModalHeader,
   ModalBody,
+  Flex,
+  NumberInput,
+  NumberInputField,
+  NumberIncrementStepper,
+  NumberInputStepper,
+  NumberDecrementStepper,
+  Spacer,
 } from "@chakra-ui/react";
 import { useAuth } from "../context/authContext";
 import { useLocation } from "react-router-dom";
@@ -49,7 +56,7 @@ const FormValue: React.FC = () => {
   const handleSendClick = async () => {
     try {
       console.log("Before API Call - totalEarnings:", totalEarnings);
-  
+
       const response = await axios.post(`${apiUrl}enviar-email`, {
         usuario: emailLogin,
         valorDeSaque:
@@ -59,12 +66,12 @@ const FormValue: React.FC = () => {
         modeloSaque: selectedPaymentMethod,
         contaDeSaque: accountNumber,
       });
-  
+
       console.log("After API Call - totalEarnings:", totalEarnings);
-  
+
       setShowEmailSentModal(true);
       response && response.status === 200 && updateTotalEarnings(0);
-  
+
       console.log("Resposta da API:", response.data);
     } catch (error) {
       console.error("Erro ao fazer a requisição:", error);
@@ -106,16 +113,34 @@ const FormValue: React.FC = () => {
         <FormControl justifyContent="space-between">
           <VStack>
             <FormLabel mt={4} mb={5}>
-              Total Earnings:
+              Request your value:
             </FormLabel>
           </VStack>
           <VStack>
+          
             <FormLabel>
-              {"$"}
+              {"Your value $:"}
               {initialTotalEarnings !== undefined
                 ? initialTotalEarnings
                 : totalEarnings}
             </FormLabel>
+            <Spacer />
+            <NumberInput
+              defaultValue={
+                initialTotalEarnings !== undefined
+                  ? initialTotalEarnings
+                  : totalEarnings
+              }
+              precision={2}
+              step={0.2}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          
           </VStack>
           <VStack>
             <FormLabel mt={4} mb={5}>
