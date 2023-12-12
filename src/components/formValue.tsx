@@ -48,6 +48,8 @@ const FormValue: React.FC = () => {
 
   const handleSendClick = async () => {
     try {
+      console.log("Before API Call - totalEarnings:", totalEarnings);
+  
       const response = await axios.post(`${apiUrl}enviar-email`, {
         usuario: emailLogin,
         valorDeSaque:
@@ -57,7 +59,12 @@ const FormValue: React.FC = () => {
         modeloSaque: selectedPaymentMethod,
         contaDeSaque: accountNumber,
       });
+  
+      console.log("After API Call - totalEarnings:", totalEarnings);
+  
       setShowEmailSentModal(true);
+      response && response.status === 200 && updateTotalEarnings(0);
+  
       console.log("Resposta da API:", response.data);
     } catch (error) {
       console.error("Erro ao fazer a requisição:", error);
