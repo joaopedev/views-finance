@@ -15,7 +15,6 @@ import {
   Text,
   ModalHeader,
   ModalBody,
-  Flex,
   NumberInput,
   NumberInputField,
   NumberIncrementStepper,
@@ -117,7 +116,6 @@ const FormValue: React.FC = () => {
             </FormLabel>
           </VStack>
           <VStack>
-          
             <FormLabel>
               {"Your value $:"}
               {initialTotalEarnings !== undefined
@@ -140,7 +138,6 @@ const FormValue: React.FC = () => {
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
-          
           </VStack>
           <VStack>
             <FormLabel mt={4} mb={5}>
