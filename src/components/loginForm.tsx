@@ -33,10 +33,9 @@ export const LoginForm: React.FC = () => {
 
   const handleLogin = () => {
     if (isAuthenticated) {
-      navigate("/home");
+      navigate("/home", { state: { email } });
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
       if (emailRegex.test(email)) {
         login(email);
         setEmailError(false);
@@ -54,9 +53,9 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/home");
+      navigate("/home", { state: { email } });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, email]);
 
   return (
     <Box p={6} rounded="md">

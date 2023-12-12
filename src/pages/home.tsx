@@ -31,7 +31,7 @@ import VideoCards from "../components/videoCards";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
-import { FaHome, FaStar } from "react-icons/fa";
+import { FaCheck, FaHome, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export const Home: React.FC = () => {
@@ -47,7 +47,7 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [showParabensModal, setShowParabensModal] = useState(true);
   const handleButtonClick = () => {
-    navigate("/requestValue", { state: { totalEarnings } });
+    navigate("/requestValue", { state: { totalEarnings, email: emailLogin  } });
   };
   const handleCloseParabensModal = () => {
     setShowParabensModal(false);
@@ -58,11 +58,18 @@ export const Home: React.FC = () => {
       <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Congratulations!</ModalHeader>
+          <VStack>
+            <ModalHeader mt={3}>Congratulations!</ModalHeader>
+          </VStack>
           <ModalCloseButton />
-          <ModalBody>
-            <Text>You won ${totalEarnings} dollars!</Text>
-          </ModalBody>
+          <VStack>
+            <FaCheck style={{ marginRight: "8px" }} />
+          </VStack>
+          <VStack>
+            <ModalBody mt={5}>
+              <Text>You won ${totalEarnings} dollars!</Text>
+            </ModalBody>
+          </VStack>
           <ModalFooter>
             <Button colorScheme="blue" onClick={handleCloseParabensModal}>
               Close
@@ -70,7 +77,6 @@ export const Home: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
       <Box
         borderWidth="1px"
         borderRadius="10px"
@@ -100,7 +106,6 @@ export const Home: React.FC = () => {
             </Stat>
           </Box>
         </Flex>
-
         <Box
           background="white"
           borderWidth="1px"
@@ -119,7 +124,6 @@ export const Home: React.FC = () => {
             <Progress colorScheme="green" size="sm" value={dailyGoalProgress} />
           </Stack>
         </Box>
-
         <Box
           backgroundColor="#BFA4A4"
           borderWidth="1px"
@@ -140,12 +144,11 @@ export const Home: React.FC = () => {
               >
                 {bonusClaimed
                   ? "Bonus claimed!"
-                  : "Reach 100% and get a bonus of $10.0"}
+                  : "Reach 100% and get a bonus of $40.0"}
               </Button>
             </VStack>
           </Stack>
         </Box>
-
         <VStack mt={10}>
           <Box
             backgroundColor="white"
@@ -163,14 +166,12 @@ export const Home: React.FC = () => {
             </Stack>
           </Box>
         </VStack>
-
         <VStack mt={10}>
           <Text fontSize="sm" fontWeight="bold">
-            My videos
+            Videos
           </Text>
         </VStack>
-
-        <VStack spacing={4} align="stretch">
+        <VStack mt={6} spacing={4} align="stretch">
           <Box
             borderWidth="1px"
             borderRadius="10px"
@@ -183,7 +184,6 @@ export const Home: React.FC = () => {
           </Box>
         </VStack>
       </Box>
-
       <Box backgroundColor="#BFA4A4" mt={6} p={4} m={2}>
         <Grid templateColumns="repeat(3, 1fr)" gap={3}>
           <VStack>

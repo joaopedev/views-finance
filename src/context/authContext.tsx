@@ -6,8 +6,8 @@ interface AuthContextType {
   login: (email: string) => void;
   logout: () => void;
   updateDailyGoalProgress: () => void;
-  videoEarning?: number | undefined,
-  setVideoEarning: React.Dispatch<React.SetStateAction<number>>,
+  videoEarning?: number | undefined;
+  setVideoEarning: React.Dispatch<React.SetStateAction<number>>;
   totalEarnings: number;
   updateTotalEarnings: (earning: number) => void;
   claimBonus: () => void;
@@ -15,7 +15,6 @@ interface AuthContextType {
   emailLogin: string | undefined;
   showForm: boolean;
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  requestWithdrawal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,15 +38,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [videoEarning, setVideoEarning] = useState<number>(0);
   const [totalEarnings, setTotalEarnings] = useState<number>(300);
   const [bonusClaimed, setBonusClaimed] = useState(false);
-  const [showForm, setShowForm] = useState(false); 
+  const [showForm, setShowForm] = useState(false);
 
   const claimBonus = () => {
     if (!bonusClaimed) {
-      setTotalEarnings((prevTotal) => prevTotal + 10);
+      setTotalEarnings((prevTotal) => prevTotal + 40);
       setBonusClaimed(true);
     }
   };
-  
+
   const updateTotalEarnings = (earning: number) => {
     setTotalEarnings((prevTotal) => {
       const newTotal = Number((prevTotal + earning).toFixed(2));
@@ -55,16 +54,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
-  const login =  (email: string) => {
+  const login = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  
     if (emailRegex.test(email)) {
       setIsAuthenticated(true);
       setemailLogin(email);
-      return email;
+      console.log(email)
+      return true;
     } else {
       console.log("E-mail inválido");
-      return undefined;
+      return false;
     }
   };
 
@@ -74,9 +74,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateDailyGoalProgress = () => {
     setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 10, 100));
-  };
-
-  const requestWithdrawal = () => {
   };
 
   return (
@@ -95,8 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         bonusClaimed,
         emailLogin,
         showForm,
-        setShowForm,
-        requestWithdrawal
+        setShowForm
       }}
     >
       {children}
