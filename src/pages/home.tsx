@@ -27,7 +27,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import image from "../images/logo.jpg";
-import VideoCards from "../components/videoCards";
+// import VideoCards from "../components/videoCards";
+import VideoMusicList from "../components/videoMusicList";
+// import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
@@ -180,7 +182,8 @@ export const Home: React.FC = () => {
             bg="white"
             boxShadow="md"
           >
-            <VideoCards />
+            <VideoMusicList />
+            {/* <VideoSportsList /> */}
           </Box>
         </VStack>
       </Box>
