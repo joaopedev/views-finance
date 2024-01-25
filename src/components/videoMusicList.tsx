@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import Axios from "axios";
-import VimeoPlayer from "./vimeoVideos";
 
 interface Video {
   uri: string;
@@ -45,7 +44,6 @@ const VideoMusicList: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

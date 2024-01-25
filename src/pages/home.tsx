@@ -25,39 +25,111 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
 // import VideoCards from "../components/videoCards";
-import VideoMusicList from "../components/videoMusicList";
+// import VideoMusicList from "../components/videoMusicList";
 // import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
-import { FaCheckCircle , FaHome, FaStar } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaCheckCircle, FaHome, FaStar } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
+import VideoCards from "../components/videoCards";
 
 export const Home: React.FC = () => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM dd", { locale: enUS });
-  const {
-    dailyGoalProgress,
-    totalEarnings,
-    claimBonus,
-    bonusClaimed,
-    emailLogin,
-  } = useAuth();
+  const { dailyGoalProgress, bonusClaimed, emailLogin, setBonusClaimed } = useAuth();
   const navigate = useNavigate();
-  const [showParabensModal, setShowParabensModal] = useState(true);
-  const handleButtonClick = () => {
-    navigate("/requestValue", { state: { totalEarnings, email: emailLogin  } });
+  const [userData, setUserData] = useState<any | null>(null);
+  const { state } = useLocation();
+  const { totalEarnings, email } = state || {};
+  const [showParabensModal, setShowParabensModal] = useState(false);
+
+  console.log(totalEarnings)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUserData(email);
+        if (userData) {
+          setUserData(userData);
+          const createdAt = new Date(userData.created_at);
+          const currentTime = new Date();
+          const timeDifference = +currentTime - +createdAt;
+          const timeDifferenceInHours = timeDifference / (1000 * 60 * 60)
+          if (timeDifferenceInHours < 1) {
+            setShowParabensModal(true);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do usuário:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [email]);
+
+  const claimBonus = async () => {
+    try {
+      if (!emailLogin) {
+        console.error("Email is undefined or null");
+        return;
+      }
+  
+      const response = await axiosInstance.post("/add-bonus", { email: emailLogin });
+      if (response.status === 200) {
+        // Update the user interface, e.g., set bonusClaimed to true
+        if (setBonusClaimed) {
+          setBonusClaimed(true);
+        }
+        const updatedUserData = await getUserData(emailLogin);
+        if (updatedUserData) {
+          setUserData(updatedUserData);
+        }
+        console.log("Bonus claimed successfully!");
+      } else {
+        console.error("Failed to claim bonus:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error claiming bonus:", error);
+    }
   };
+
+  const getUserData = async (emailLogin: string) => { 
+    try {
+      if (!emailLogin) {
+        console.error(emailLogin);
+        return null;
+      }
+  
+      const response = await axiosInstance.get(`accountByEmail/${emailLogin}`);
+  
+      if (response.status === 200 && response.data && response.data.conta) {
+        return response.data.conta;
+      } else {
+        console.error("Resposta inválida da API:", response);
+        return null;
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados do usuário:", error);
+      return null;
+    }
+  };
+
+  const handleButtonClick = () => {
+    navigate("/requestValue", { state: { totalEarnings: userData?.balance, email: userData?.email } });
+  };
+
   const handleCloseParabensModal = () => {
     setShowParabensModal(false);
   };
 
+
   return (
     <Box background="#BFA4A4" minHeight="100vh" overflowX="hidden">
-      <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
+       <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
         <ModalOverlay />
         <ModalContent>
           <VStack>
@@ -69,7 +141,7 @@ export const Home: React.FC = () => {
           </VStack>
           <VStack>
             <ModalBody mt={5}>
-              <Text>You won ${totalEarnings} dollars!</Text>
+              <Text>You won ${userData?.balance} dollars!</Text>
             </ModalBody>
           </VStack>
           <ModalFooter>
@@ -78,7 +150,7 @@ export const Home: React.FC = () => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> 
       <Box
         borderWidth="1px"
         borderRadius="10px"
@@ -94,7 +166,7 @@ export const Home: React.FC = () => {
               <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
                 <Avatar name="Secret Tool" src={image} />
                 <Box>
-                  <Heading size="sm">Welcome! {emailLogin}</Heading>
+                  <Heading size="sm">Welcome! {userData?.email}</Heading>
                 </Box>
               </Flex>
             </WrapItem>
@@ -103,7 +175,7 @@ export const Home: React.FC = () => {
           <Box>
             <Stat>
               <StatLabel>Collected</StatLabel>
-              <StatNumber>$ {totalEarnings}</StatNumber>
+              <StatNumber>$ {userData?.balance}</StatNumber>
               <StatHelpText>{formattedDate}</StatHelpText>
             </Stat>
           </Box>
@@ -163,7 +235,7 @@ export const Home: React.FC = () => {
           >
             <Stack spacing={5}>
               <Text color="BFA4A4" fontSize="sm" fontWeight="bold">
-                My balance $ {totalEarnings}
+                My balance $ {userData?.balance}
               </Text>
             </Stack>
           </Box>
@@ -182,7 +254,8 @@ export const Home: React.FC = () => {
             bg="white"
             boxShadow="md"
           >
-            <VideoMusicList />
+            {/* <VideoMusicList /> */}
+            <VideoCards />
             {/* <VideoSportsList /> */}
           </Box>
         </VStack>

@@ -22,6 +22,7 @@ import {
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import image from "../images/logo.jpg";
+import axios from "axios";
 
 export const LoginForm: React.FC = () => {
   const { login, isAuthenticated } = useAuth();
@@ -31,14 +32,40 @@ export const LoginForm: React.FC = () => {
   const [emailError, setEmailError] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    
     if (isAuthenticated) {
-      navigate("/home", { state: { email } });
+      navigate("/home");
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (emailRegex.test(email)) {
-        login(email);
-        setEmailError(false);
+        try {
+          const response = await axios.get(`http://localhost:3005/accountByEmail/${email}`);
+          if (response.status === 200 && response.data && response.data.conta) {
+            const { balance } = response.data.conta; // Extract balance from the response
+            login(email);
+            setEmailError(false);
+            navigate("/home", { state: { totalEarnings: balance, email } });
+          } else {
+            const registerResponse = await axios.post(`http://localhost:3005/registerUsers`, {
+              email,
+            });
+            if (registerResponse.status === 200) {
+              login(email);
+              setEmailError(false);
+              const { balance } = registerResponse.data.conta; // Extract balance from the response
+              navigate("/home", { state: { totalEarnings: balance, email } });
+            } else {
+              setLoginError(true);
+              setEmailError(true);
+              console.error(registerResponse.data.message);
+            }
+          }
+        } catch (error) {
+          console.error("Erro ao fazer login:", error);
+          setLoginError(true);
+          setEmailError(true);
+        }
       } else {
         setEmailError(true);
         setLoginError(true);
@@ -53,7 +80,7 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/home", { state: { email } });
+      navigate("/home");
     }
   }, [isAuthenticated, navigate, email]);
 
@@ -108,10 +135,10 @@ export const LoginForm: React.FC = () => {
               <Text>
                 <OrderedList>
                   <ListItem>
-                    <strong>Terms</strong> By accessing the Secret Tool
-                    website, you agree to comply with these terms of service,
-                    all applicable laws and regulations, and acknowledge that
-                    you are responsible for complying with all applicable local
+                    <strong>Terms</strong> By accessing the Secret Tool website,
+                    you agree to comply with these terms of service, all
+                    applicable laws and regulations, and acknowledge that you
+                    are responsible for complying with all applicable local
                     laws. If you do not agree with any of these terms, you are
                     prohibited from using or accessing this site.
                   </ListItem>
@@ -149,8 +176,8 @@ export const LoginForm: React.FC = () => {
                     in electronic or printed format.
                   </ListItem>
                   <ListItem>
-                    <strong>Disclaimer</strong> The materials on the Secret
-                    Tool website are provided 'as is'. Secret Tool makes no
+                    <strong>Disclaimer</strong> The materials on the Secret Tool
+                    website are provided 'as is'. Secret Tool makes no
                     warranties, expressed or implied, and hereby disclaims and
                     negates all other warranties, including, without limitation,
                     implied warranties or conditions of merchantability, fitness
@@ -163,8 +190,8 @@ export const LoginForm: React.FC = () => {
                     to this site.
                   </ListItem>
                   <ListItem>
-                    <strong>Limitations</strong> In no event shall Secret
-                    Tool or its suppliers be liable for any damages (including,
+                    <strong>Limitations</strong> In no event shall Secret Tool
+                    or its suppliers be liable for any damages (including,
                     without limitation, damages for loss of data or profit, or
                     due to business interruption) arising out of the use or
                     inability to use the materials on Secret Tool, even if
@@ -186,11 +213,11 @@ export const LoginForm: React.FC = () => {
                     update the materials.
                   </ListItem>
                   <ListItem>
-                    <strong>Links</strong> Secret Tool has not reviewed all
-                    of the sites linked to its website and is not responsible
-                    for the contents of any such linked site. The inclusion of
-                    any link does not imply endorsement by Secret Tool of the
-                    site. Use of any linked site is at the user's own risk.
+                    <strong>Links</strong> Secret Tool has not reviewed all of
+                    the sites linked to its website and is not responsible for
+                    the contents of any such linked site. The inclusion of any
+                    link does not imply endorsement by Secret Tool of the site.
+                    Use of any linked site is at the user's own risk.
                   </ListItem>
                   <ListItem>
                     <strong>Modifications</strong> Secret Tool may revise these
@@ -212,7 +239,9 @@ export const LoginForm: React.FC = () => {
               <Button colorScheme="blue" mr={3} onClick={onClose}>
                 Close
               </Button>
-              <Button onClick={onClose} variant="ghost">Accept terms of use.</Button>
+              <Button onClick={onClose} variant="ghost">
+                Accept terms of use.
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
