@@ -35,7 +35,7 @@ export const LoginForm: React.FC = () => {
   const handleLogin = async () => {
     try {
       const response = await axiosInstance.get(`accountByEmail/${email}`);
-  
+
       if (response.status === 200 && response.data && response.data.conta) {
         const { balance } = response.data.conta;
         login(email);
@@ -46,7 +46,7 @@ export const LoginForm: React.FC = () => {
         const registerResponse = await axiosInstance.post(`registerUsers`, {
           email,
         });
-  
+
         if (registerResponse.status === 200) {
           login(email);
           setEmailError(false);
@@ -108,7 +108,7 @@ export const LoginForm: React.FC = () => {
             <Button
               type="submit"
               marginTop={6}
-              backgroundColor="#BFA4A4"
+              backgroundColor="white"
               onClick={handleLogin}
             >
               Login

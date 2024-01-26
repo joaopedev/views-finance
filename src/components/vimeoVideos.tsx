@@ -60,13 +60,10 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
             const newBalance = currentBalance + earning;
 
             try {
-              await axiosInstance.post(
-                "http://localhost:3005/add-balance-video",
-                {
-                  email: email,
-                  balance: earning,
-                }
-              );
+              await axiosInstance.post("add-balance-video", {
+                email: email,
+                balance: earning,
+              });
             } catch (error) {
               console.error("Erro ao enviar ganhos para o backend:", error);
             }
