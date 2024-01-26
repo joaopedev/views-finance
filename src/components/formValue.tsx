@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../context/authContext";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const FormValue: React.FC = () => {
   const { totalEarnings, updateTotalEarnings, emailLogin } = useAuth();
@@ -56,7 +56,7 @@ const FormValue: React.FC = () => {
     try {
       console.log("Before API Call - totalEarnings:", totalEarnings);
 
-      const response = await axios.post(`${apiUrl}enviar-email`, {
+      const response = await axiosInstance.post(`${apiUrl}enviar-email`, {
         usuario: emailLogin,
         valorDeSaque:
           initialTotalEarnings !== undefined

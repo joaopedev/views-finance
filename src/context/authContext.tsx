@@ -4,7 +4,7 @@ import React, {
   useState,
   ReactNode
 } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export interface UserData {
   balance: number;
@@ -58,8 +58,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const getUserData = async () => {
     try {
       if (emailLogin) {
-        const response = await axios.get(
-          `http://localhost:3005/accountByEmail/${emailLogin}`
+        const response = await axiosInstance.get(
+          `accountByEmail/${emailLogin}`
         );
   
         if (
@@ -104,8 +104,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updateUserData = async (data: { balance?: number }) => {
     try {
       if (emailLogin) {
-        const updatedUserData = await axios.put(
-          `http://localhost:3005/updateAccountByEmail/${emailLogin}`,
+        const updatedUserData = await axiosInstance.put(
+          `updateAccountByEmail/${emailLogin}`,
           data
         );
 

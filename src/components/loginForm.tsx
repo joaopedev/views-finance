@@ -22,7 +22,7 @@ import {
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import image from "../images/logo.jpg";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export const LoginForm: React.FC = () => {
   const { login, isAuthenticated } = useAuth();
@@ -34,7 +34,7 @@ export const LoginForm: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get(`http://localhost:3005/accountByEmail/${email}`);
+      const response = await axiosInstance.get(`accountByEmail/${email}`);
   
       if (response.status === 200 && response.data && response.data.conta) {
         const { balance } = response.data.conta;
@@ -43,7 +43,7 @@ export const LoginForm: React.FC = () => {
         localStorage.setItem("emailLogin", email);
         navigate("/home", { state: { totalEarnings: balance, email } });
       } else {
-        const registerResponse = await axios.post(`http://localhost:3005/registerUsers`, {
+        const registerResponse = await axiosInstance.post(`registerUsers`, {
           email,
         });
   
@@ -59,7 +59,6 @@ export const LoginForm: React.FC = () => {
         }
       }
     } catch (error) {
-      // Erro ao fazer a requisição
       console.error("Erro ao fazer login:", error);
       setLoginError(true);
       setEmailError(true);
