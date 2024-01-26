@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import VimeoPlayer from "./vimeoVideos";
 
 const VideoCards: React.FC = () => {
+  const emailLogin = localStorage.getItem("emailLogin") || "";
   const vimeoVideoPrimeiroExperimental = 259539583;
   const vimeoVideoIdAnimation = 266850611;
   const vimeoVideoMusician = 275407702;
@@ -16,16 +17,16 @@ const VideoCards: React.FC = () => {
 
   return (
 <Flex mt={8} direction={{ base: "column", md: "row" }} flexWrap="wrap" justify="center" align="center" gap={4}>
-  <VimeoPlayer videoId={Number(vimeoVideoPrimeiroExperimental)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoIdAnimation)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoMusician)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoSports)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoExperimental)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoMusicianRapper)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental2)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental3)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental4)}  />
-  <VimeoPlayer videoId={Number(vimeoVideoMusicianExperimental5)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoPrimeiroExperimental)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoIdAnimation)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusician)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoSports)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoExperimental)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusicianRapper)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusicianExperimental2)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusicianExperimental3)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusicianExperimental4)}  />
+  <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusicianExperimental5)}  />
 </Flex>
   );
 };
