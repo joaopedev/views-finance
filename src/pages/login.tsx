@@ -6,9 +6,9 @@ export const Login: React.FC = () => {
   const boxWidth = useBreakpointValue({ base: "90%", md: "70vw", lg: "60vw" });
 
   return (
-    <Box backgroundColor="#BFA4A4" height="100vh">
+    <Box backgroundColor="black" height="100vh">
       <Flex
-        backgroundColor="#BFA4A4"
+        backgroundColor="black"
         justifyContent="center"
         alignItems="center"
         height="100%"

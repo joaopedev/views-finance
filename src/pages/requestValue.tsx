@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 
 export const RequestValue: React.FC = () => {
   return (
-    <Box backgroundColor="#BFA4A4">
+    <Box backgroundColor="black">
       <Link to="/home">
         <Box p={4}>
           <ArrowBackIcon />
         </Box>
       </Link>
       <Flex
-        backgroundColor="#BFA4A4"
+        backgroundColor="black"
         height="95vh"
         alignItems="center"
         justifyContent="center"

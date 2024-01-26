@@ -190,7 +190,7 @@ const FormValue: React.FC = () => {
           <VStack mt={6} mb={3}>
             <Button
               marginTop={6}
-              backgroundColor="#BFA4A4"
+              backgroundColor="black"
               onClick={handleSendClick}
             >
               Send!
