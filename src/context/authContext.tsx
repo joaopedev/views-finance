@@ -2,10 +2,14 @@ import React, {
   createContext,
   useContext,
   useState,
-  ReactNode,
-  useEffect,
+  ReactNode
 } from "react";
 import axios from "axios";
+
+export interface UserData {
+  balance: number;
+  email: string;
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -19,10 +23,13 @@ interface AuthContextType {
   updateTotalEarnings: (earning: number) => void;
   claimBonus: () => void;
   bonusClaimed: boolean;
-  setBonusClaimed: (value: boolean) => void; 
+  setBonusClaimed: (value: boolean) => void;
   emailLogin: string | undefined;
   showForm: boolean;
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  getUserData: () => Promise<void>;
+  addEarnings: (earning: number) => void;
+  updateUserData: (data: { balance?: number }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,54 +51,84 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [dailyGoalProgress, setDailyGoalProgress] = useState(0);
   const [emailLogin, setemailLogin] = useState<string | undefined>(undefined);
   const [videoEarning, setVideoEarning] = useState<number>(0);
-  const [totalEarnings, setTotalEarnings] = useState<number>(0); // Inicializado com 0 para ser atualizado após a chamada à API
+  const [totalEarnings, setTotalEarnings] = useState<number>(0);
   const [bonusClaimed, setBonusClaimed] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Verificar se emailLogin está definido
-        if (emailLogin) {
-          const response = await axios.get(
-            `http://localhost:3005/accountByEmail/${emailLogin}`
-          );
-
-          if (response.status === 200 && response.data && response.data.conta) {
-            const { balance, email } = response.data.conta;
-            setTotalEarnings(balance);
-            setemailLogin(email);
-            setIsAuthenticated(true);
-          }
+  const getUserData = async () => {
+    try {
+      if (emailLogin) {
+        const response = await axios.get(
+          `http://localhost:3005/accountByEmail/${emailLogin}`
+        );
+  
+        if (
+          response.status === 200 &&
+          response.data &&
+          response.data.conta &&
+          response.data.conta.email &&
+          response.data.conta.balance !== undefined
+        ) {
+          const { balance, email } = response.data.conta as UserData;
+          setTotalEarnings(balance);
+          setemailLogin(email);
+          setIsAuthenticated(true);
+        } else {
+          console.error("Dados do usuário incompletos ou inválidos:", response.data);
         }
-      } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
       }
-    };
+    } catch (error) {
+      console.error("Erro ao buscar dados do usuário:", error);
+    }
+  };
 
-    fetchUserData();
-  }, [emailLogin]);
+  const addEarnings = (earning: number) => {
+    setTotalEarnings((prevTotal) => Number((prevTotal + earning).toFixed(2)));
+  };
+
+  // useEffect(() => {
+  //   getUserData();
+  // }, [emailLogin]);
 
   const claimBonus = () => {
     if (!bonusClaimed) {
-      setTotalEarnings((prevTotal) => prevTotal + 40);
+      addEarnings(40);
       setBonusClaimed(true);
     }
   };
 
   const updateTotalEarnings = (earning: number) => {
-    setTotalEarnings((prevTotal) => {
-      const newTotal = Number((prevTotal + earning).toFixed(2));
-      return newTotal;
-    });
+    addEarnings(earning);
+  };
+
+  const updateUserData = async (data: { balance?: number }) => {
+    try {
+      if (emailLogin) {
+        const updatedUserData = await axios.put(
+          `http://localhost:3005/updateAccountByEmail/${emailLogin}`,
+          data
+        );
+
+        if (
+          updatedUserData.status === 200 &&
+          updatedUserData.data &&
+          updatedUserData.data.conta
+        ) {
+          const { balance } = updatedUserData.data.conta as UserData;
+          setTotalEarnings(balance);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar dados do usuário:", error);
+    }
   };
 
   const login = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  
     if (emailRegex.test(email)) {
-      setIsAuthenticated(true);
       setemailLogin(email);
+      setIsAuthenticated(true);
       return true;
     } else {
       console.log("E-mail inválido");
@@ -124,7 +161,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         emailLogin,
         showForm,
         setShowForm,
-        setBonusClaimed
+        setBonusClaimed,
+        getUserData,
+        addEarnings,
+        updateUserData,
       }}
     >
       {children}

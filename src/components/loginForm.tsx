@@ -33,43 +33,36 @@ export const LoginForm: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleLogin = async () => {
-    
-    if (isAuthenticated) {
-      navigate("/home");
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (emailRegex.test(email)) {
-        try {
-          const response = await axios.get(`http://localhost:3005/accountByEmail/${email}`);
-          if (response.status === 200 && response.data && response.data.conta) {
-            const { balance } = response.data.conta; // Extract balance from the response
-            login(email);
-            setEmailError(false);
-            navigate("/home", { state: { totalEarnings: balance, email } });
-          } else {
-            const registerResponse = await axios.post(`http://localhost:3005/registerUsers`, {
-              email,
-            });
-            if (registerResponse.status === 200) {
-              login(email);
-              setEmailError(false);
-              const { balance } = registerResponse.data.conta; // Extract balance from the response
-              navigate("/home", { state: { totalEarnings: balance, email } });
-            } else {
-              setLoginError(true);
-              setEmailError(true);
-              console.error(registerResponse.data.message);
-            }
-          }
-        } catch (error) {
-          console.error("Erro ao fazer login:", error);
+    try {
+      const response = await axios.get(`http://localhost:3005/accountByEmail/${email}`);
+  
+      if (response.status === 200 && response.data && response.data.conta) {
+        const { balance } = response.data.conta;
+        login(email);
+        setEmailError(false);
+        localStorage.setItem("emailLogin", email);
+        navigate("/home", { state: { totalEarnings: balance, email } });
+      } else {
+        const registerResponse = await axios.post(`http://localhost:3005/registerUsers`, {
+          email,
+        });
+  
+        if (registerResponse.status === 200) {
+          login(email);
+          setEmailError(false);
+          localStorage.setItem("emailLogin", email);
+          navigate("/home", { state: { email } });
+        } else {
           setLoginError(true);
           setEmailError(true);
+          console.error(registerResponse.data.message);
         }
-      } else {
-        setEmailError(true);
-        setLoginError(true);
       }
+    } catch (error) {
+      // Erro ao fazer a requisição
+      console.error("Erro ao fazer login:", error);
+      setLoginError(true);
+      setEmailError(true);
     }
   };
 

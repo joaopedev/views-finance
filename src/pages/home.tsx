@@ -27,7 +27,6 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
-// import VideoCards from "../components/videoCards";
 // import VideoMusicList from "../components/videoMusicList";
 // import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
@@ -41,14 +40,14 @@ import VideoCards from "../components/videoCards";
 export const Home: React.FC = () => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM dd", { locale: enUS });
-  const { dailyGoalProgress, bonusClaimed, emailLogin, setBonusClaimed } = useAuth();
+  const { dailyGoalProgress, bonusClaimed, setBonusClaimed, updateUserData } = useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState<any | null>(null);
   const { state } = useLocation();
   const { totalEarnings, email } = state || {};
   const [showParabensModal, setShowParabensModal] = useState(false);
 
-  console.log(totalEarnings)
+  console.log(totalEarnings);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -58,36 +57,46 @@ export const Home: React.FC = () => {
           const createdAt = new Date(userData.created_at);
           const currentTime = new Date();
           const timeDifference = +currentTime - +createdAt;
-          const timeDifferenceInHours = timeDifference / (1000 * 60 * 60)
+          const timeDifferenceInHours = timeDifference / (1000 * 60 * 60);
           if (timeDifferenceInHours < 1) {
             setShowParabensModal(true);
           }
+  
+          localStorage.setItem("balance", userData?.balance);
         }
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
       }
     };
-
+  
     fetchUserData();
-  }, [email]);
+  
+  }, [email, userData?.balance, updateUserData]);
 
   const claimBonus = async () => {
     try {
-      if (!emailLogin) {
+      const storedEmail = localStorage.getItem("emailLogin");
+
+      if (!storedEmail) {
         console.error("Email is undefined or null");
         return;
       }
-  
-      const response = await axiosInstance.post("/add-bonus", { email: emailLogin });
+
+      const response = await axiosInstance.post("/add-bonus", {
+        email: storedEmail,
+      });
+
       if (response.status === 200) {
-        // Update the user interface, e.g., set bonusClaimed to true
         if (setBonusClaimed) {
           setBonusClaimed(true);
         }
-        const updatedUserData = await getUserData(emailLogin);
+
+        const updatedUserData = await getUserData(storedEmail);
+
         if (updatedUserData) {
           setUserData(updatedUserData);
         }
+
         console.log("Bonus claimed successfully!");
       } else {
         console.error("Failed to claim bonus:", response.data.message);
@@ -97,15 +106,17 @@ export const Home: React.FC = () => {
     }
   };
 
-  const getUserData = async (emailLogin: string) => { 
+  const getUserData = async (
+    emailLogin: string | undefined
+  ): Promise<any | null> => {
     try {
       if (!emailLogin) {
         console.error(emailLogin);
         return null;
       }
-  
+
       const response = await axiosInstance.get(`accountByEmail/${emailLogin}`);
-  
+
       if (response.status === 200 && response.data && response.data.conta) {
         return response.data.conta;
       } else {
@@ -119,17 +130,18 @@ export const Home: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    navigate("/requestValue", { state: { totalEarnings: userData?.balance, email: userData?.email } });
+    navigate("/requestValue", {
+      state: { totalEarnings: userData?.balance, email: userData?.email },
+    });
   };
 
   const handleCloseParabensModal = () => {
     setShowParabensModal(false);
   };
 
-
   return (
     <Box background="#BFA4A4" minHeight="100vh" overflowX="hidden">
-       <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
+      <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
         <ModalOverlay />
         <ModalContent>
           <VStack>
@@ -150,7 +162,7 @@ export const Home: React.FC = () => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal> 
+      </Modal>
       <Box
         borderWidth="1px"
         borderRadius="10px"
