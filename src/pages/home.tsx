@@ -27,11 +27,14 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
+// import VideoMusicList from "../components/videoMusicList";
+// import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
-import { FaCheckCircle, FaStar } from "react-icons/fa";
 import { FcHome } from "react-icons/fc";
+import { FaCheckCircle } from "react-icons/fa";
+import { ImStarEmpty } from "react-icons/im";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import VideoCards from "../components/videoCards";
@@ -46,8 +49,6 @@ export const Home: React.FC = () => {
   const { state } = useLocation();
   const { totalEarnings, email } = state || {};
   const [showParabensModal, setShowParabensModal] = useState(false);
-  const [isWithdrawalButtonEnabled, setIsWithdrawalButtonEnabled] =
-    useState(false);
 
   console.log(totalEarnings);
   useEffect(() => {
@@ -60,14 +61,11 @@ export const Home: React.FC = () => {
           const currentTime = new Date();
           const timeDifference = +currentTime - +createdAt;
           const timeDifferenceInHours = timeDifference / (1000 * 60 * 60);
-
           if (timeDifferenceInHours < 1) {
             setShowParabensModal(true);
           }
 
           localStorage.setItem("balance", userData?.balance);
-
-          setIsWithdrawalButtonEnabled(userData?.balance > 1500);
         }
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
@@ -134,9 +132,7 @@ export const Home: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    navigate("/requestValue", {
-      state: { totalEarnings: userData?.balance, email: userData?.email },
-    });
+    navigate("/requestValue");
   };
 
   const handleCloseParabensModal = () => {
@@ -226,7 +222,7 @@ export const Home: React.FC = () => {
           <Stack backgroundColor="black" spacing={5}>
             <VStack>
               <Button
-                backgroundColor="grey"
+                backgroundColor="gray.300"
                 fontSize="sm"
                 fontWeight="bold"
                 onClick={claimBonus}
@@ -250,7 +246,7 @@ export const Home: React.FC = () => {
             boxShadow="md"
           >
             <Stack spacing={5}>
-              <Text color="black" fontSize="sm" fontWeight="bold">
+              <Text fontSize="sm" fontWeight="bold">
                 My balance $ {userData?.balance}
               </Text>
             </Stack>
@@ -278,25 +274,30 @@ export const Home: React.FC = () => {
       </Box>
       <Box backgroundColor="black" mt={6} p={4} m={2}>
         <Grid templateColumns="repeat(3, 1fr)" gap={3}>
-          <VStack>
+          <VStack borderRadius="10px" padding="4">
             <Link>
               <FcHome />
             </Link>
           </VStack>
           <VStack>
             <Button
-              backgroundColor="grey"
+              borderWidth="1px"
+              borderRadius="10px"
+              borderColor="gray.300"
+              padding="4"
+              margin="2"
+              backgroundColor="white"
+              boxShadow="md"
               onClick={handleButtonClick}
-              isDisabled={!isWithdrawalButtonEnabled}
             >
-              {isWithdrawalButtonEnabled
-                ? "Request Withdrawal"
-                : "Insufficient Balance"}
+              Request Withdrawal
             </Button>
           </VStack>
-          <VStack>
-            <Link>
-              <FaStar />
+          <VStack
+
+          >
+            <Link >
+              <ImStarEmpty />
             </Link>
           </VStack>
         </Grid>

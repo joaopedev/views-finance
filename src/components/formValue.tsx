@@ -27,20 +27,28 @@ import { useLocation } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 
 const FormValue: React.FC = () => {
-  const { totalEarnings, updateTotalEarnings, emailLogin } = useAuth();
+  const {
+    updateTotalEarnings,
+    showInsufficientModal,
+    setShowInsufficientModal,
+    emailLogin: contextEmailLogin,
+  } = useAuth();
+
+  const location = useLocation();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("");
-  const location = useLocation();
   const [accountNumber, setAccountNumber] = useState<string>("");
   const [showEmailSentModal, setShowEmailSentModal] = useState(false);
   const [initialTotalEarnings, setInitialTotalEarnings] = useState<
     number | undefined
   >(undefined);
 
+  const emailLogin = localStorage.getItem("emailLogin") || contextEmailLogin;
+  const balance = localStorage.getItem("balance") || "0";
+
   const handleAccountNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log(accountNumber);
     setAccountNumber(event.target.value);
   };
 
@@ -54,14 +62,18 @@ const FormValue: React.FC = () => {
 
   const handleSendClick = async () => {
     try {
+      const totalEarnings = parseFloat(localStorage.getItem("balance") || "0");
+
       console.log("Before API Call - totalEarnings:", totalEarnings);
+
+      if (totalEarnings < 1500) {
+        setShowInsufficientModal(true);
+        return;
+      }
 
       const response = await axiosInstance.post(`${apiUrl}enviar-email`, {
         usuario: emailLogin,
-        valorDeSaque:
-          initialTotalEarnings !== undefined
-            ? initialTotalEarnings
-            : totalEarnings,
+        valorDeSaque: totalEarnings,
         modeloSaque: selectedPaymentMethod,
         contaDeSaque: accountNumber,
       });
@@ -83,6 +95,12 @@ const FormValue: React.FC = () => {
       updateTotalEarnings(location.state.totalEarnings);
     }
   }, [location.state, updateTotalEarnings]);
+
+  useEffect(() => {
+    if (showInsufficientModal) {
+      // Alguma lógica aqui se necessário
+    }
+  }, [showInsufficientModal]);
 
   return (
     <Box p={6} rounded="md">
@@ -108,6 +126,16 @@ const FormValue: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <Box>
+        <Modal
+          isOpen={showInsufficientModal}
+          onClose={() => setShowInsufficientModal(false)}
+        >
+          {
+            "You can only request your amount when you obtain the amount of $1500."
+          }
+        </Modal>
+      </Box>
       <VStack>
         <FormControl justifyContent="space-between">
           <VStack>
@@ -120,14 +148,14 @@ const FormValue: React.FC = () => {
               {"Your value $:"}
               {initialTotalEarnings !== undefined
                 ? initialTotalEarnings
-                : totalEarnings}
+                : parseFloat(balance)}
             </FormLabel>
             <Spacer />
             <NumberInput
               defaultValue={
                 initialTotalEarnings !== undefined
                   ? initialTotalEarnings
-                  : totalEarnings
+                  : parseFloat(balance)
               }
               precision={2}
               step={0.2}
@@ -190,7 +218,7 @@ const FormValue: React.FC = () => {
           <VStack mt={6} mb={3}>
             <Button
               marginTop={6}
-              backgroundColor="black"
+              backgroundColor="white"
               onClick={handleSendClick}
             >
               Send!

@@ -30,6 +30,8 @@ interface AuthContextType {
   getUserData: () => Promise<void>;
   addEarnings: (earning: number) => void;
   updateUserData: (data: { balance?: number }) => Promise<void>;
+  showInsufficientModal: boolean;
+  setShowInsufficientModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -54,6 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [totalEarnings, setTotalEarnings] = useState<number>(0);
   const [bonusClaimed, setBonusClaimed] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [showInsufficientModal, setShowInsufficientModal] = useState(false);
 
   const getUserData = async () => {
     try {
@@ -85,10 +88,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const addEarnings = (earning: number) => {
     setTotalEarnings((prevTotal) => Number((prevTotal + earning).toFixed(2)));
   };
-
-  // useEffect(() => {
-  //   getUserData();
-  // }, [emailLogin]);
 
   const claimBonus = () => {
     if (!bonusClaimed) {
@@ -165,6 +164,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         getUserData,
         addEarnings,
         updateUserData,
+        showInsufficientModal,
+        setShowInsufficientModal,
       }}
     >
       {children}
