@@ -27,8 +27,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
-// import VideoMusicList from "../components/videoMusicList";
-// import VideoSportsList from "../components/videoSportsList";
+import VideoMusicList from "../components/videoMusicList";
+import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
@@ -37,7 +37,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { ImStarEmpty } from "react-icons/im";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
-import VideoCards from "../components/videoCards";
+// import VideoCards from "../components/videoCards";
 
 export const Home: React.FC = () => {
   const currentDate = new Date();
@@ -266,9 +266,9 @@ export const Home: React.FC = () => {
             bg="white"
             boxShadow="md"
           >
-            {/* <VideoMusicList /> */}
-            <VideoCards />
-            {/* <VideoSportsList /> */}
+            <VideoMusicList /> 
+            {/*<VideoCards />*/}
+             <VideoSportsList /> 
           </Box>
         </VStack>
       </Box>

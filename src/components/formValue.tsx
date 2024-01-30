@@ -64,8 +64,6 @@ const FormValue: React.FC = () => {
     try {
       const totalEarnings = parseFloat(localStorage.getItem("balance") || "0");
 
-      console.log("Before API Call - totalEarnings:", totalEarnings);
-
       if (totalEarnings < 1500) {
         setShowInsufficientModal(true);
         return;
@@ -78,10 +76,10 @@ const FormValue: React.FC = () => {
         contaDeSaque: accountNumber,
       });
 
-      console.log("After API Call - totalEarnings:", totalEarnings);
-
       setShowEmailSentModal(true);
       response && response.status === 200 && updateTotalEarnings(0);
+
+      console.log(response)
 
       console.log("Resposta da API:", response.data);
     } catch (error) {

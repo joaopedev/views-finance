@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import Axios from "axios";
-import VimeoPlayer from "./vimeoVideos";
+// import VimeoPlayer from "./vimeoVideos";
 
 interface Video {
   uri: string;
@@ -16,13 +16,13 @@ const VideoSportList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (loading) return;
-
+  
     try {
       setLoading(true);
       const response = await Axios.get(
-        `https://v1.nocodeapi.com/joaopedev/vimeo/jVOSJzuLGyTSCQKv/search?q=sports&page=${page}`
+        `https://v1.nocodeapi.com/joaopedev/vimeo/jVOSJzuLGyTSCQKv/search?q=sports&page=${page}&width=320`
       );
       const newVideos: Video[] = response.data?.data ?? [];
       setVideos((prevVideos) => [...prevVideos, ...newVideos]);
@@ -32,21 +32,20 @@ const VideoSportList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading, page]);
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
     const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
 
     if (scrollHeight - scrollTop === clientHeight) {
       fetchData();
     }
-  };
+  }, [fetchData]);
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchData]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -74,7 +73,10 @@ const VideoSportList: React.FC = () => {
       {videos.map((video) => (
         <React.Fragment key={video.uri}>
           {video.embed && video.embed.html ? (
-            <div dangerouslySetInnerHTML={{ __html: video.embed.html }} />
+            <div
+              dangerouslySetInnerHTML={{ __html: video.embed.html }}
+              style={{ maxWidth: "100%", width: "320px" }}
+            />
           ) : (
             <React.Fragment>
               {video.uri && (
