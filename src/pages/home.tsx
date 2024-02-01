@@ -27,8 +27,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
-import VideoMusicList from "../components/videoMusicList";
-import VideoSportsList from "../components/videoSportsList";
+// import VideoMusicList from "../components/videoMusicList";
+// import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
@@ -37,12 +37,12 @@ import { FaCheckCircle } from "react-icons/fa";
 import { ImStarEmpty } from "react-icons/im";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
-// import VideoCards from "../components/videoCards";
+import VideoCards from "../components/videoCards";
 
 export const Home: React.FC = () => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM dd", { locale: enUS });
-  const { dailyGoalProgress, bonusClaimed, setBonusClaimed, updateUserData } =
+  const { dailyGoalProgress, updateUserData } =
     useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState<any | null>(null);
@@ -74,39 +74,6 @@ export const Home: React.FC = () => {
 
     fetchUserData();
   }, [email, userData?.balance, updateUserData]);
-
-  const claimBonus = async () => {
-    try {
-      const storedEmail = localStorage.getItem("emailLogin");
-
-      if (!storedEmail) {
-        console.error("Email is undefined or null");
-        return;
-      }
-
-      const response = await axiosInstance.post("/add-bonus", {
-        email: storedEmail,
-      });
-
-      if (response.status === 200) {
-        if (setBonusClaimed) {
-          setBonusClaimed(true);
-        }
-
-        const updatedUserData = await getUserData(storedEmail);
-
-        if (updatedUserData) {
-          setUserData(updatedUserData);
-        }
-
-        console.log("Bonus claimed successfully!");
-      } else {
-        console.error("Failed to claim bonus:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error claiming bonus:", error);
-    }
-  };
 
   const getUserData = async (
     emailLogin: string | undefined
@@ -220,19 +187,24 @@ export const Home: React.FC = () => {
           boxShadow="md"
         >
           <Stack backgroundColor="black" spacing={5}>
-            <VStack>
-              <Button
-                backgroundColor="gray.300"
-                fontSize="sm"
-                fontWeight="bold"
-                onClick={claimBonus}
-                isDisabled={bonusClaimed}
-              >
-                {bonusClaimed
-                  ? "Bonus claimed!"
-                  : "Reach 100% and get a bonus of $40.0"}
-              </Button>
-            </VStack>
+          <VStack>
+          <Box
+            backgroundColor="white"
+            borderWidth="1px"
+            borderRadius="10px"
+            borderColor="gray.300"
+            p={4}
+            m={2}
+            boxShadow="md"
+          >
+            <Stack spacing={5}>
+              <Text fontSize="sm" fontWeight="bold">
+              Earn up to $40 per day!
+              </Text>
+            </Stack>
+          </Box>
+        </VStack>
+            
           </Stack>
         </Box>
         <VStack mt={10}>
@@ -266,9 +238,9 @@ export const Home: React.FC = () => {
             bg="white"
             boxShadow="md"
           >
-            <VideoMusicList /> 
-            {/*<VideoCards />*/}
-             <VideoSportsList /> 
+            {/* <VideoMusicList />  */}
+            <VideoCards />
+             {/* <VideoSportsList />  */}
           </Box>
         </VStack>
       </Box>

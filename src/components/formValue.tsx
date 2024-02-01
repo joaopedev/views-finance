@@ -77,11 +77,14 @@ const FormValue: React.FC = () => {
       });
 
       setShowEmailSentModal(true);
-      response && response.status === 200 && updateTotalEarnings(0);
 
-      console.log(response)
+      if (response && response.status === 200) {
+        updateTotalEarnings(0);
+      } else {
+        console.error("Erro ao enviar e-mail:", response.data);
+      }
 
-      console.log("Resposta da API:", response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Erro ao fazer a requisição:", error);
     }
@@ -96,12 +99,39 @@ const FormValue: React.FC = () => {
 
   useEffect(() => {
     if (showInsufficientModal) {
-      // Alguma lógica aqui se necessário
+      return;
     }
   }, [showInsufficientModal]);
 
   return (
     <Box p={6} rounded="md">
+      {/* Modal para valor inferior a $1500 */}
+      <Modal
+        isOpen={showInsufficientModal}
+        onClose={() => setShowInsufficientModal(false)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Insufficient Funds</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              You can only request your amount when you obtain the amount of
+              $1500.
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              onClick={() => setShowInsufficientModal(false)}
+            >
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal para valor enviado com sucesso */}
       <Modal
         isOpen={showEmailSentModal}
         onClose={() => setShowEmailSentModal(false)}
@@ -124,16 +154,6 @@ const FormValue: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Box>
-        <Modal
-          isOpen={showInsufficientModal}
-          onClose={() => setShowInsufficientModal(false)}
-        >
-          {
-            "You can only request your amount when you obtain the amount of $1500."
-          }
-        </Modal>
-      </Box>
       <VStack>
         <FormControl justifyContent="space-between">
           <VStack>

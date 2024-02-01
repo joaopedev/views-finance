@@ -57,6 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [bonusClaimed, setBonusClaimed] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showInsufficientModal, setShowInsufficientModal] = useState(false);
+  const [bonusClaimedDate, setBonusClaimedDate] = useState<string | null>(null);
 
   const getUserData = async () => {
     try {
@@ -90,9 +91,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const claimBonus = () => {
-    if (!bonusClaimed) {
+    // Verifica se o bônus já foi reivindicado hoje
+    const today = new Date().toLocaleDateString();
+    if (!bonusClaimed || bonusClaimedDate !== today) {
       addEarnings(40);
       setBonusClaimed(true);
+      setBonusClaimedDate(today);
+    } else {
+      console.log("Bônus já reivindicado hoje");
     }
   };
 
