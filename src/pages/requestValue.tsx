@@ -1,17 +1,22 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Button } from "@chakra-ui/react";
 import { AuthProvider } from "../context/authContext";
 import FormValue from "../components/formValue";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const RequestValue: React.FC = () => {
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/home");
+  };
+
   return (
-    <Box backgroundColor="black">
-      <Link to="/home">
-        <Box p={4}>
-          <ArrowBackIcon />
-        </Box>
-      </Link>
+    <Box h="100vh"  backgroundColor="black">
+      <Button color="black" background="black" onClick={handleButtonClick}>
+          <ArrowBackIcon color="white" />
+      </Button>
       <Flex
         backgroundColor="black"
         height="95vh"

@@ -239,8 +239,8 @@ export const Home: React.FC = () => {
             boxShadow="md"
           >
             {/* <VideoMusicList />  */}
-            <VideoCards />
-             {/* <VideoSportsList />  */}
+             <VideoCards /> 
+            {/* <VideoSportsList />  */}
           </Box>
         </VStack>
       </Box>

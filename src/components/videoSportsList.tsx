@@ -22,7 +22,7 @@ const VideoSportList: React.FC = () => {
     try {
       setLoading(true);
       const response = await Axios.get(
-        `https://v1.nocodeapi.com/joaopedev/vimeo/jVOSJzuLGyTSCQKv/search?q=sports&page=${page}&width=320`
+        `https://v1.nocodeapi.com/shiro666/vimeo/iYlVHGUpTXMruzPN/search?q=sports&page=2&perPage=15`
       );
       const newVideos: Video[] = response.data?.data ?? [];
       setVideos((prevVideos) => [...prevVideos, ...newVideos]);
@@ -32,7 +32,7 @@ const VideoSportList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [loading, page]);
+  }, [loading]);
 
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;

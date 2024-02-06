@@ -146,7 +146,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const updateDailyGoalProgress = () => {
-    setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 10, 100));
+    setDailyGoalProgress((prevProgress) => Math.min(prevProgress + 5, 100));
   };
 
   return (
