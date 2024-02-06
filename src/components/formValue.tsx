@@ -142,7 +142,7 @@ const FormValue: React.FC = () => {
           <ModalCloseButton />
           <ModalBody mt={5}>
             <Text>Your withdrawal request has been sent successfully!</Text>
-            <Text>You will receive your values within 15 days.</Text>
+            <Text>You will receive your values within 15 days and your value will be reset at that moment.</Text>
           </ModalBody>
           <ModalFooter>
             <Button
