@@ -74,6 +74,7 @@ const FormValue: React.FC = () => {
         valorDeSaque: totalEarnings,
         modeloSaque: selectedPaymentMethod,
         contaDeSaque: accountNumber,
+        hostUrl: window.location.origin
       });
 
       setShowEmailSentModal(true);
@@ -105,7 +106,6 @@ const FormValue: React.FC = () => {
 
   return (
     <Box p={6} rounded="md">
-      {/* Modal para valor inferior a $1500 */}
       <Modal
         isOpen={showInsufficientModal}
         onClose={() => setShowInsufficientModal(false)}
@@ -130,8 +130,6 @@ const FormValue: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      {/* Modal para valor enviado com sucesso */}
       <Modal
         isOpen={showEmailSentModal}
         onClose={() => setShowEmailSentModal(false)}
