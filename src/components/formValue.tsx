@@ -74,6 +74,7 @@ const FormValue: React.FC = () => {
         valorDeSaque: totalEarnings,
         modeloSaque: selectedPaymentMethod,
         contaDeSaque: accountNumber,
+        hostUrl: window.location.origin
       });
 
       setShowEmailSentModal(true);
