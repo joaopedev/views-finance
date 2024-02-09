@@ -1,5 +1,5 @@
 import { Box, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/loginForm";
 import { AuthProvider } from "../context/authContext";
 
 export const Login: React.FC = () => {
