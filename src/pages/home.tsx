@@ -42,15 +42,14 @@ import VideoCards from "../components/videoCards";
 export const Home: React.FC = () => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMM dd", { locale: enUS });
-  const { dailyGoalProgress, updateUserData } =
-    useAuth();
+  const { dailyGoalProgress, updateUserData } = useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState<any | null>(null);
   const { state } = useLocation();
   const { totalEarnings, email } = state || {};
   const [showParabensModal, setShowParabensModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  console.log(totalEarnings);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -66,14 +65,16 @@ export const Home: React.FC = () => {
           }
 
           localStorage.setItem("balance", userData?.balance);
+          if (userData && userData.ganhos_diarios >= 40) {
+            setShowModal(true);
+          }
         }
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
       }
     };
-
     fetchUserData();
-  }, [email, userData?.balance, updateUserData]);
+  }, [email, userData?.balance, updateUserData, totalEarnings]);
 
   const getUserData = async (
     emailLogin: string | undefined
@@ -106,6 +107,14 @@ export const Home: React.FC = () => {
     setShowParabensModal(false);
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const navigateToHome = () => {
+    navigate("/");
+  };
+
   return (
     <Box background="black" minHeight="100vh" overflowX="hidden">
       <Modal isOpen={showParabensModal} onClose={handleCloseParabensModal}>
@@ -127,6 +136,19 @@ export const Home: React.FC = () => {
             <Button colorScheme="blue" onClick={handleCloseParabensModal}>
               Close
             </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={showModal} onClose={handleCloseModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Congratulations!</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>You have reached $40 in daily earnings, now you must wait 24 hours to be able to access again!</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={navigateToHome}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -187,24 +209,23 @@ export const Home: React.FC = () => {
           boxShadow="md"
         >
           <Stack backgroundColor="black" spacing={5}>
-          <VStack>
-          <Box
-            backgroundColor="white"
-            borderWidth="1px"
-            borderRadius="10px"
-            borderColor="gray.300"
-            p={4}
-            m={2}
-            boxShadow="md"
-          >
-            <Stack spacing={5}>
-              <Text fontSize="sm" fontWeight="bold">
-              Earn up to $40 per day!
-              </Text>
-            </Stack>
-          </Box>
-        </VStack>
-            
+            <VStack>
+              <Box
+                backgroundColor="white"
+                borderWidth="1px"
+                borderRadius="10px"
+                borderColor="gray.300"
+                p={4}
+                m={2}
+                boxShadow="md"
+              >
+                <Stack spacing={5}>
+                  <Text fontSize="sm" fontWeight="bold">
+                    Earn up to $40 per day!
+                  </Text>
+                </Stack>
+              </Box>
+            </VStack>
           </Stack>
         </Box>
         <VStack mt={10}>
@@ -219,7 +240,7 @@ export const Home: React.FC = () => {
           >
             <Stack spacing={5}>
               <Text fontSize="sm" fontWeight="bold">
-                My balance $ {userData?.balance}
+                My balance $ {userData?.ganhos_diarios}
               </Text>
             </Stack>
           </Box>
@@ -239,7 +260,7 @@ export const Home: React.FC = () => {
             boxShadow="md"
           >
             {/* <VideoMusicList />  */}
-             <VideoCards /> 
+            <VideoCards />
             {/* <VideoSportsList />  */}
           </Box>
         </VStack>
@@ -265,10 +286,8 @@ export const Home: React.FC = () => {
               Request Withdrawal
             </Button>
           </VStack>
-          <VStack
-
-          >
-            <Link >
+          <VStack>
+            <Link>
               <ImStarEmpty />
             </Link>
           </VStack>

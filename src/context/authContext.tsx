@@ -1,14 +1,14 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode
-} from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 import axiosInstance from "../utils/axiosInstance";
 
 export interface UserData {
   balance: number;
   email: string;
+  createAt: Date;
+  ganhos_diarios?: number;
+  upadate_at: Date;
+  date_login: Date;
+  date_request_value: Date;
 }
 
 interface AuthContextType {
@@ -27,11 +27,12 @@ interface AuthContextType {
   emailLogin: string | undefined;
   showForm: boolean;
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  getUserData: () => Promise<void>;
   addEarnings: (earning: number) => void;
   updateUserData: (data: { balance?: number }) => Promise<void>;
   showInsufficientModal: boolean;
   setShowInsufficientModal: React.Dispatch<React.SetStateAction<boolean>>;
+  dailyGains: boolean;
+  setDailyGains: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,40 +59,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [showForm, setShowForm] = useState(false);
   const [showInsufficientModal, setShowInsufficientModal] = useState(false);
   const [bonusClaimedDate, setBonusClaimedDate] = useState<string | null>(null);
-
-  const getUserData = async () => {
-    try {
-      if (emailLogin) {
-        const response = await axiosInstance.get(
-          `accountByEmail/${emailLogin}`
-        );
-  
-        if (
-          response.status === 200 &&
-          response.data &&
-          response.data.conta &&
-          response.data.conta.email &&
-          response.data.conta.balance !== undefined
-        ) {
-          const { balance, email } = response.data.conta as UserData;
-          setTotalEarnings(balance);
-          setemailLogin(email);
-          setIsAuthenticated(true);
-        } else {
-          console.error("Dados do usuário incompletos ou inválidos:", response.data);
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados do usuário:", error);
-    }
-  };
+  const [dailyGains, setDailyGains] = useState(false);
 
   const addEarnings = (earning: number) => {
     setTotalEarnings((prevTotal) => Number((prevTotal + earning).toFixed(2)));
   };
 
   const claimBonus = () => {
-    // Verifica se o bônus já foi reivindicado hoje
     const today = new Date().toLocaleDateString();
     if (!bonusClaimed || bonusClaimedDate !== today) {
       addEarnings(40);
@@ -130,7 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
     if (emailRegex.test(email)) {
       setemailLogin(email);
       setIsAuthenticated(true);
@@ -167,11 +141,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         showForm,
         setShowForm,
         setBonusClaimed,
-        getUserData,
         addEarnings,
         updateUserData,
         showInsufficientModal,
         setShowInsufficientModal,
+        dailyGains,
+        setDailyGains,
       }}
     >
       {children}
