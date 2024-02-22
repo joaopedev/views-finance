@@ -64,7 +64,7 @@ export const LoginForm: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
+      console.error("Erro ao fazer login:", error, isAuthenticated);
       setLoginError(true);
       setEmailError(true);
     }
