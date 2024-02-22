@@ -7,6 +7,7 @@ import axiosInstance from "../utils/axiosInstance";
 interface VimeoPlayerProps {
   videoId: number;
   email: string;
+  data_login?: Date;
 }
 
 function calculateVideoEarning(videoDuration: number): number {
@@ -35,7 +36,6 @@ function calculateVideoEarning(videoDuration: number): number {
 
 const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
   const {
-    getUserData,
     updateUserData,
     updateTotalEarnings,
     setVideoEarning,
@@ -49,38 +49,28 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
 
     const handleVideoEnd = async () => {
       if (!hasUpdatedProgress) {
-        try {
-          const userData = (await getUserData()) as
-            | { balance?: number }
-            | undefined;
-          const currentBalance = userData?.balance || 0;
-
-          player.getDuration().then(async (duration: number) => {
-            const earning = calculateVideoEarning(duration / 60);
-            const newBalance = currentBalance + earning;
-
-            try {
-              await axiosInstance.post("add-balance-video", {
-                email: email,
-                balance: earning,
-              });
-            } catch (error) {
-              console.error("Erro ao enviar ganhos para o backend:", error);
-            }
-
-            const updatedUserData = await updateUserData({
-              balance: newBalance,
+        player.getDuration().then(async (duration: number) => {
+          const earning = calculateVideoEarning(duration / 60);
+          const userData = await getUserData(email);
+          try {
+            await axiosInstance.post("add-balance-video", {
+              email: email,
+              balance: earning,
+              ganhos_diarios: earning,
             });
+          } catch (error) {
+            console.error("Erro ao enviar ganhos para o backend:", error);
+          }
 
-            console.log(updatedUserData);
-            setVideoEarning(earning !== undefined ? earning : 0);
-            updateTotalEarnings(earning);
-            updateDailyGoalProgress();
-            setHasUpdatedProgress(true);
-          });
-        } catch (error) {
-          console.error("Erro ao obter dados do usuário:", error);
-        }
+          if (userData.ganhos_diarios >= 40) {
+            alert("Chegou seu limite");
+          }
+
+          setVideoEarning(earning !== undefined ? earning : 0);
+          updateTotalEarnings(earning);
+          updateDailyGoalProgress();
+          setHasUpdatedProgress(true);
+        });
       }
     };
 
@@ -107,9 +97,31 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
     setVideoEarning,
     updateTotalEarnings,
     hasUpdatedProgress,
-    getUserData,
     email,
   ]);
+
+  const getUserData = async (
+    emailLogin: string | undefined
+  ): Promise<any | null> => {
+    try {
+      if (!emailLogin) {
+        console.error(emailLogin);
+        return null;
+      }
+
+      const response = await axiosInstance.get(`accountByEmail/${emailLogin}`);
+
+      if (response.status === 200 && response.data && response.data.conta) {
+        return response.data.conta;
+      } else {
+        console.error("Resposta inválida da API:", response);
+        return null;
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados do usuário:", error);
+      return null;
+    }
+  };
 
   return <Box ref={playerRef} />;
 };

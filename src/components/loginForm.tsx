@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -31,17 +31,22 @@ export const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const [emailError, setEmailError] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [gainDaily, setGainDaily] = useState(false);
 
   const handleLogin = async () => {
     try {
       const response = await axiosInstance.get(`accountByEmail/${email}`);
 
       if (response.status === 200 && response.data && response.data.conta) {
-        const { balance } = response.data.conta;
+        const { balance, ganhos_diarios } = response.data.conta;
         login(email);
         setEmailError(false);
         localStorage.setItem("emailLogin", email);
-        navigate("/home", { state: { totalEarnings: balance, email } });
+        if (ganhos_diarios <= 40)
+          return navigate("/home", {
+            state: { totalEarnings: balance, email },
+          });
+        setGainDaily(true);
       } else {
         const registerResponse = await axiosInstance.post(`registerUsers`, {
           email,
@@ -65,21 +70,10 @@ export const LoginForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleLogin();
-  };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home");
-    }
-  }, [isAuthenticated, navigate, email]);
-
   return (
     <Box p={6} rounded="md">
       <VStack>
-        <FormControl onSubmit={handleSubmit} justifyContent="space-between">
+        <FormControl onSubmit={handleLogin} justifyContent="space-between">
           <VStack>
             <Image
               borderRadius="10%"
@@ -233,6 +227,28 @@ export const LoginForm: React.FC = () => {
               </Button>
               <Button onClick={onClose} variant="ghost">
                 Accept terms of use.
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </VStack>
+      <VStack id="showModal">
+        <Modal isOpen={gainDaily} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Limit exceeded.</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              You have reached the value of $40 per day, your return will only
+              be allowed 24 hours after your last earnings.
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={() => setGainDaily(false)}
+              >
+                Close
               </Button>
             </ModalFooter>
           </ModalContent>
