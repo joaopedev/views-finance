@@ -16,7 +16,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  OrderedList
+  OrderedList,
 } from "@chakra-ui/react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +33,7 @@ export const LoginForm: React.FC = () => {
   const [gainDaily, setGainDaily] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const intervalRef = useRef<number | null>(null);
+  const [showLoginSuccessModal, setShowLoginSuccessModal] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -41,19 +42,13 @@ export const LoginForm: React.FC = () => {
       if (response.status === 200 && response.data && response.data.conta) {
         const { balance, ganhos_diarios, data_login } = response.data.conta;
 
-        if (!data_login && ganhos_diarios >= 40) {
-          // Limpar dados do usuário e exibir mensagem de bloqueio
+        if ((!data_login || data_login >=24) && ganhos_diarios >= 40 ) {
           await axiosInstance.post("clear-user-data", { email });
-          console.log("Usuário bloqueado. Limpeza de dados realizada.");
-
-          // Exibir mensagem de bloqueio ao usuário
-          console.log("Aguardar 24 horas para fazer login novamente.");
-
+          setShowLoginSuccessModal(true);
           return;
         }
 
-        if (ganhos_diarios < 40) {
-          // Permitir login para usuários com ganhos_diarios < 40
+        if (ganhos_diarios < 39) {
           login(email);
           setEmailError(false);
           localStorage.setItem("emailLogin", email);
@@ -61,7 +56,6 @@ export const LoginForm: React.FC = () => {
             state: { totalEarnings: balance, email },
           });
         } else {
-          // Verificar se já passaram 24 horas desde o último login
           const lastLoginDate = new Date(data_login);
           const currentDate = new Date();
           const timeDifferenceInHours =
@@ -69,22 +63,21 @@ export const LoginForm: React.FC = () => {
             (1000 * 60 * 60);
 
           if (timeDifferenceInHours >= 24) {
-            // Permitir login para usuários com ganhos_diarios >= 40 após 24 horas
+            await axiosInstance.post("clear-user-data", { email });
             login(email);
             setEmailError(false);
             localStorage.setItem("emailLogin", email);
+            setShowLoginSuccessModal(true);
             return navigate("/home", {
               state: { totalEarnings: balance, email },
             });
           } else {
-            // Exibir mensagem de bloqueio ao usuário
             console.log("Aguardar 24 horas para fazer login novamente.");
             setGainDaily(true);
             startCountdown(24 - timeDifferenceInHours);
           }
         }
       } else {
-        // Registrar novo usuário
         const registerResponse = await axiosInstance.post(`registerUsers`, {
           email,
         });
@@ -97,11 +90,10 @@ export const LoginForm: React.FC = () => {
         } else {
           setLoginError(true);
           setEmailError(true);
-          console.error(isAuthenticated);
         }
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
+      console.error("Erro ao fazer login:", error, isAuthenticated);
       setLoginError(true);
       setEmailError(true);
     }
@@ -117,7 +109,7 @@ export const LoginForm: React.FC = () => {
   };
 
   const startCountdown = (hours: number) => {
-    setTimeLeft(hours * 60 * 60); // Converter horas em segundos
+    setTimeLeft(hours * 60 * 60);
     intervalRef.current = window.setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime === 0) {
@@ -126,7 +118,7 @@ export const LoginForm: React.FC = () => {
         }
         return prevTime - 1;
       });
-    }, 1000); // Atualizar a cada segundo
+    }, 1000);
   };
 
   useEffect(() => {
@@ -215,6 +207,29 @@ export const LoginForm: React.FC = () => {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => setGainDaily(false)}
+              >
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </VStack>
+      <VStack id="showModal">
+        <Modal
+          isOpen={showLoginSuccessModal}
+          onClose={() => setShowLoginSuccessModal(false)}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Login Success!</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              You have successfully logged in after 24 hours.
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                onClick={() => setShowLoginSuccessModal(false)}
               >
                 Close
               </Button>
