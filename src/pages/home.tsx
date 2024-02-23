@@ -68,13 +68,16 @@ export const Home: React.FC = () => {
           if (userData && userData.ganhos_diarios >= 40) {
             setShowModal(true);
           }
+          if (userData && userData.ganhos_diarios >= 40) {
+            navigate("/")
+          }
         }
       } catch (error) {
         console.error("Erro ao buscar dados do usuário:", error);
       }
     };
     fetchUserData();
-  }, [email, userData?.balance, updateUserData, totalEarnings]);
+  }, [email, userData?.balance, updateUserData, totalEarnings, navigate]);
 
   const getUserData = async (
     emailLogin: string | undefined
