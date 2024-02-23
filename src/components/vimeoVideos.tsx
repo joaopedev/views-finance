@@ -46,26 +46,27 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
 
   useEffect(() => {
     let player: Vimeo;
-
+  
     const handleVideoEnd = async () => {
       if (!hasUpdatedProgress) {
         player.getDuration().then(async (duration: number) => {
+          const currentDate = new Date().toISOString();
+          if (isNaN(duration)) {
+            console.error("Duração do vídeo inválida:", duration);
+            return;
+          }
           const earning = calculateVideoEarning(duration / 60);
-          const userData = await getUserData(email);
           try {
             await axiosInstance.post("add-balance-video", {
               email: email,
               balance: earning,
               ganhos_diarios: earning,
+              data_login: currentDate,
             });
           } catch (error) {
             console.error("Erro ao enviar ganhos para o backend:", error);
           }
-
-          if (userData.ganhos_diarios >= 40) {
-            alert("Chegou seu limite");
-          }
-
+  
           setVideoEarning(earning !== undefined ? earning : 0);
           updateTotalEarnings(earning);
           updateDailyGoalProgress();
@@ -73,17 +74,17 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
         });
       }
     };
-
+  
     if (playerRef.current) {
       player = new Vimeo(playerRef.current, {
         id: videoId,
         width: 320,
       });
-
+  
       player.on("ended", handleVideoEnd);
       player.getDuration();
     }
-
+  
     return () => {
       if (player) {
         player.off("ended");
@@ -100,28 +101,6 @@ const VimeoPlayer: React.FC<VimeoPlayerProps> = ({ videoId, email }) => {
     email,
   ]);
 
-  const getUserData = async (
-    emailLogin: string | undefined
-  ): Promise<any | null> => {
-    try {
-      if (!emailLogin) {
-        console.error(emailLogin);
-        return null;
-      }
-
-      const response = await axiosInstance.get(`accountByEmail/${emailLogin}`);
-
-      if (response.status === 200 && response.data && response.data.conta) {
-        return response.data.conta;
-      } else {
-        console.error("Resposta inválida da API:", response);
-        return null;
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados do usuário:", error);
-      return null;
-    }
-  };
 
   return <Box ref={playerRef} />;
 };

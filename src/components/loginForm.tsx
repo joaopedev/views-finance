@@ -38,14 +38,29 @@ export const LoginForm: React.FC = () => {
       const response = await axiosInstance.get(`accountByEmail/${email}`);
 
       if (response.status === 200 && response.data && response.data.conta) {
-        const { balance, ganhos_diarios } = response.data.conta;
+        const { balance, ganhos_diarios, data_login } = response.data.conta;
+
+        if (data_login && ganhos_diarios >= 40) {
+          const lastLoginDate = new Date(data_login);
+          const currentDate = new Date();
+          const timeDifferenceInHours =
+            (currentDate.getTime() - lastLoginDate.getTime()) /
+            (1000 * 60 * 60);
+
+          if (timeDifferenceInHours >= 24) {
+            console.log("Limpar dados de login e ganhos diários"); // Apenas para depuração
+          }
+        }
+
         login(email);
         setEmailError(false);
         localStorage.setItem("emailLogin", email);
-        if (ganhos_diarios <= 40)
+
+        if (ganhos_diarios <= 40) {
           return navigate("/home", {
             state: { totalEarnings: balance, email },
           });
+        }
         setGainDaily(true);
       } else {
         const registerResponse = await axiosInstance.post(`registerUsers`, {
@@ -60,11 +75,11 @@ export const LoginForm: React.FC = () => {
         } else {
           setLoginError(true);
           setEmailError(true);
-          console.error(registerResponse.data.message);
+          console.error(registerResponse.data.message, isAuthenticated);
         }
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error, isAuthenticated);
+      console.error("Erro ao fazer login:", error);
       setLoginError(true);
       setEmailError(true);
     }
