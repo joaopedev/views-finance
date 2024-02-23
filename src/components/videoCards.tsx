@@ -5,7 +5,7 @@ import VimeoPlayer from "./vimeoVideos";
 const VideoCards: React.FC = () => {
   const emailLogin = localStorage.getItem("emailLogin") || "";
   const vimeoVideoPrimeiroExperimental = 881503269;
-  const vimeoVideoIdAnimation = 888104051;
+  // const vimeoVideoIdAnimation = 888104051;
   const vimeoVideoMusician = 821053340;
   const vimeoVideoSports = 827066711;
   const vimeoVideoExperimental = 748085969;
@@ -62,7 +62,7 @@ const VideoCards: React.FC = () => {
         email={emailLogin}
         videoId={Number(vimeoVideoPrimeiroExperimental)}
       />
-      <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoIdAnimation)} />
+      {/* <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoIdAnimation)} /> */}
       <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoMusician)} />
       <VimeoPlayer email={emailLogin} videoId={Number(vimeoVideoSports)} />
       <VimeoPlayer
