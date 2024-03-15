@@ -27,8 +27,6 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
-// import VideoMusicList from "../components/videoMusicList";
-// import VideoSportsList from "../components/videoSportsList";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
@@ -59,17 +57,13 @@ export const Home: React.FC = () => {
           const createdAt = new Date(userData.created_at);
           const currentTime = new Date();
           const timeDifference = +currentTime - +createdAt;
-          const timeDifferenceInHours = timeDifference / (1000 * 60 * 60);
-          if (timeDifferenceInHours < 1) {
+          const timeDifferenceInMinutes = timeDifference / (1000 * 60);
+          if (timeDifferenceInMinutes < 10) {
             setShowParabensModal(true);
           }
-
           localStorage.setItem("balance", userData?.balance);
           if (userData && userData.ganhos_diarios >= 40) {
             setShowModal(true);
-          }
-          if (userData && userData.ganhos_diarios >= 40) {
-            navigate("/")
           }
         }
       } catch (error) {
@@ -112,6 +106,7 @@ export const Home: React.FC = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    navigate("/")
   };
 
   const navigateToHome = () => {
