@@ -85,7 +85,6 @@ const FormValue: React.FC = () => {
         console.error("Erro ao enviar e-mail:", response.data);
       }
 
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao fazer a requisição:", error);
     }

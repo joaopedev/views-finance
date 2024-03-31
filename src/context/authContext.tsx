@@ -72,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setBonusClaimed(true);
       setBonusClaimedDate(today);
     } else {
-      console.log("Bônus já reivindicado hoje");
+      return false;
     }
   };
 
@@ -110,7 +110,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsAuthenticated(true);
       return true;
     } else {
-      console.log("E-mail inválido");
       return false;
     }
   };

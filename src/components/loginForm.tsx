@@ -72,7 +72,6 @@ export const LoginForm: React.FC = () => {
               state: { totalEarnings: balance, email },
             });
           } else {
-            console.log("Aguardar 24 horas para fazer login novamente.");
             setGainDaily(true);
             startCountdown(24 - timeDifferenceInHours);
           }
