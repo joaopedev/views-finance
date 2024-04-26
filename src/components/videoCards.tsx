@@ -4,11 +4,11 @@ import VimeoPlayer from "./vimeoVideos";
 
 const VideoCards: React.FC = () => {
   const emailLogin = localStorage.getItem("emailLogin") || "";
-  const vimeoVideoPrimeiroExperimental = 365084715;
-  const vimeoVideoIdAnimation = 562022790;
-  const vimeoVideoMusician = 503166067;
-  const vimeoVideoSports = 568654394;
-  const vimeoVideoExperimental = 394465759;
+  const vimeoVideoPrimeiroExperimental = 331791994;
+  const vimeoVideoIdAnimation = 329851685;
+  const vimeoVideoMusician = 328347906;
+  const vimeoVideoSports = 321528476;
+  const vimeoVideoExperimental = 321603291;
   const vimeoVideoMusicianRapper = 903371114;
   const vimeoVideoMusicianExperimental2 = 596253805;
   const vimeoVideoMusicianExperimental3 = 329851685;
