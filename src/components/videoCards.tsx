@@ -4,50 +4,50 @@ import VimeoPlayer from "./vimeoVideos";
 
 const VideoCards: React.FC = () => {
   const emailLogin = localStorage.getItem("emailLogin") || "";
-  const vimeoVideoPrimeiroExperimental = 514470296;
-  const vimeoVideoIdAnimation = 624629606;
-  const vimeoVideoMusician = 935940343;
-  const vimeoVideoSports = 946321885;
-  const vimeoVideoExperimental = 500832353;
-  const vimeoVideoMusicianRapper = 507727334;
-  const vimeoVideoMusicianExperimental2 = 518070868;
-  const vimeoVideoMusicianExperimental3 = 509197370;
-  const vimeoVideoMusicianExperimental4 = 601888091;
-  const vimeoVideoMusicianExperimental5 = 509236733;
-  const vimeoVideoMusicianExperimental6 = 499560327;
-  const vimeoVideoMusicianExperimental7 = 421439852;
-  const vimeoVideoMusicianExperimental8 = 510990058;
-  const vimeoVideoMusicianExperimenta19 = 337565310;
-  const vimeoVideoMusicianExperimenta20 = 510814675;
-  const vimeoVideoMusicianExperimenta21 = 533929538;
-  const vimeoVideoMusicianExperimenta22 = 506575905;
-  const vimeoVideoMusicianExperimenta29 = 532948707;
-  const vimeoVideoMusicianExperimenta30 = 527503331;
-  const vimeoVideoMusicianExperimenta31 = 538517463;
-  const vimeoVideoMusicianExperimenta32 = 943290776;
-  const vimeoVideoMusicianExperimenta33 = 540889297;
-  const vimeoVideoMusicianExperimenta34 = 444196728;
-  const vimeoVideoMusicianExperimenta35 = 547868060;
-  const vimeoVideoMusicianExperimenta36 = 325639357;
-  const vimeoVideoMusicianExperimenta37 = 300566368;
-  const vimeoVideoMusicianExperimenta38 = 319005945;
-  const vimeoVideoMusicianExperimenta39 = 926252508;
-  const vimeoVideoMusicianExperimenta40 = 951746102;
-  const vimeoVideoMusicianExperimenta41 = 326589452;
-  const vimeoVideoMusicianExperimenta42 = 951534919;
-  const vimeoVideoMusicianExperimenta43 = 953072985;
-  const vimeoVideoMusicianExperimenta44 = 326703336;
-  const vimeoVideoMusicianExperimenta45 = 950195113;
-  const vimeoVideoMusicianExperimenta46 = 313816377;
-  const vimeoVideoMusicianExperimenta47 = 931144540;
+  const vimeoVideoPrimeiroExperimental = 501090322;
+  const vimeoVideoIdAnimation = 534551768;
+  const vimeoVideoMusician = 938968583;
+  const vimeoVideoSports = 549017960;
+  const vimeoVideoExperimental = 392561193;
+  const vimeoVideoMusicianRapper = 319005945;
+  const vimeoVideoMusicianExperimental2 = 325355987;
+  const vimeoVideoMusicianExperimental3 = 926252508;
+  const vimeoVideoMusicianExperimental4 = 324146324;
+  const vimeoVideoMusicianExperimental5 = 951746102;
+  const vimeoVideoMusicianExperimental6 = 960454227;
+  const vimeoVideoMusicianExperimental7 = 326589452;
+  const vimeoVideoMusicianExperimental8 = 325639357;
+  const vimeoVideoMusicianExperimenta19 = 931144540;
+  const vimeoVideoMusicianExperimenta20 = 313816377;
+  const vimeoVideoMusicianExperimenta21 = 300566368;
+  const vimeoVideoMusicianExperimenta22 = 524032099;
+  const vimeoVideoMusicianExperimenta29 = 521446927;
+  const vimeoVideoMusicianExperimenta30 = 433742071;
+  const vimeoVideoMusicianExperimenta31 = 508115982;
+  const vimeoVideoMusicianExperimenta32 = 533716285;
+  const vimeoVideoMusicianExperimenta33 = 443086717;
+  const vimeoVideoMusicianExperimenta34 = 456782138;
+  const vimeoVideoMusicianExperimenta35 = 601252574;
+  const vimeoVideoMusicianExperimenta36 = 307133457;
+  const vimeoVideoMusicianExperimenta37 = 410922836;
+  const vimeoVideoMusicianExperimenta38 = 311490594;
+  const vimeoVideoMusicianExperimenta39 = 393119694;
+  const vimeoVideoMusicianExperimenta40 = 494158928;
+  const vimeoVideoMusicianExperimenta41 = 387166786;
+  const vimeoVideoMusicianExperimenta42 = 338844706;
+  const vimeoVideoMusicianExperimenta43 = 382288050;
+  const vimeoVideoMusicianExperimenta44 = 488504990;
+  const vimeoVideoMusicianExperimenta45 = 384501556;
+  const vimeoVideoMusicianExperimenta46 = 449258441;
+  const vimeoVideoMusicianExperimenta47 = 394195776;
   const vimeoVideoMusicianExperimenta48 = 559851845;
   const vimeoVideoMusicianExperimenta49 = 944650902;
   const vimeoVideoMusicianExperimenta50 = 646393987;
-  const vimeoVideoMusicianExperimenta51 = 513971042;
-  const vimeoVideoMusicianExperimenta52 = 501103076;
-  const vimeoVideoMusicianExperimenta53 = 501094858;
-  const vimeoVideoMusicianExperimenta54 = 507655142;
-  const vimeoVideoMusicianExperimenta55 = 504606566;
+  const vimeoVideoMusicianExperimenta51 = 953984444;
+  const vimeoVideoMusicianExperimenta52 = 460666206;
+  const vimeoVideoMusicianExperimenta53 = 737854276;
+  const vimeoVideoMusicianExperimenta54 = 533502904;
+  const vimeoVideoMusicianExperimenta55 = 728921660;
 
   return (
     <Flex
@@ -89,10 +89,10 @@ const VideoCards: React.FC = () => {
         email={emailLogin}
         videoId={Number(vimeoVideoMusicianExperimental8)}
       />
-       <VimeoPlayer
+      <VimeoPlayer
         email={emailLogin}
         videoId={Number(vimeoVideoMusicianExperimental5)}
-      /> 
+      />
       <VimeoPlayer
         email={emailLogin}
         videoId={Number(vimeoVideoMusicianExperimental7)}
