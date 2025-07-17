@@ -15,7 +15,6 @@ import {
   VStack,
   Heading,
   Button,
-  Grid,
   Link,
   Modal,
   ModalOverlay,
@@ -32,7 +31,6 @@ import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
 import { FcHome } from "react-icons/fc";
 import { FaCheckCircle } from "react-icons/fa";
-import { ImStarEmpty } from "react-icons/im";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import VideoCards from "../components/videoCards";
@@ -47,7 +45,7 @@ export const Home: React.FC = () => {
   const { totalEarnings, email } = state || {};
   const [showParabensModal, setShowParabensModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  const linkUrl = process.env.LINK_REFOUND || "https://forms.gle/J83AJcPrmKNkZwbE8";
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -100,13 +98,17 @@ export const Home: React.FC = () => {
     navigate("/requestValue");
   };
 
+  const handleButtonRefund = () => {
+    window.open(linkUrl, "_blank");
+  };
+
   const handleCloseParabensModal = () => {
     setShowParabensModal(false);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    navigate("/")
+    navigate("/");
   };
 
   const navigateToHome = () => {
@@ -143,7 +145,10 @@ export const Home: React.FC = () => {
           <ModalHeader>Congratulations!</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>You have reached $40 in daily earnings, now you must wait 24 hours to be able to access again!</Text>
+            <Text>
+              You have reached $40 in daily earnings, now you must wait 24 hours
+              to be able to access again!
+            </Text>
           </ModalBody>
           <ModalFooter>
             <Button onClick={navigateToHome}>Close</Button>
@@ -264,32 +269,38 @@ export const Home: React.FC = () => {
         </VStack>
       </Box>
       <Box backgroundColor="black" mt={6} p={4} m={2}>
-        <Grid templateColumns="repeat(3, 1fr)" gap={3}>
-          <VStack borderRadius="10px" padding="4">
-            <Link>
-              <FcHome />
-            </Link>
-          </VStack>
-          <VStack>
-            <Button
-              borderWidth="1px"
-              borderRadius="10px"
-              borderColor="gray.300"
-              padding="4"
-              margin="2"
-              backgroundColor="white"
-              boxShadow="md"
-              onClick={handleButtonClick}
-            >
-              Request Withdrawal
-            </Button>
-          </VStack>
-          <VStack>
-            <Link>
-              <ImStarEmpty />
-            </Link>
-          </VStack>
-        </Grid>
+        <Flex justifyContent="space-between" alignItems="center" mb={4}>
+          <Link>
+            <FcHome />
+          </Link>
+          <Link>
+          <Button
+            borderWidth="1px"
+            borderRadius="10px"
+            borderColor="gray.300"
+            padding="4"
+            
+            backgroundColor="white"
+            boxShadow="md"
+            onClick={handleButtonClick}
+          >
+            Request Withdrawal
+          </Button>
+          </Link>
+          <Link>
+          <Button
+            borderWidth="1px"
+            borderRadius="10px"
+            borderColor="gray.300"
+            padding="4"
+            backgroundColor="white"
+            boxShadow="md"
+            onClick={handleButtonRefund}
+          >
+            Request your Refund
+          </Button>
+          </Link>
+        </Flex>
       </Box>
     </Box>
   );
