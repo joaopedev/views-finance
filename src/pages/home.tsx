@@ -22,15 +22,13 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
-  Center,
+  ModalFooter
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
 import { format } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useAuth } from "../context/authContext";
-import { FcHome } from "react-icons/fc";
 import { FaCheckCircle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
@@ -118,6 +116,10 @@ export const Home: React.FC = () => {
       console.error("Erro ao buscar dados do usuário:", error);
       return null;
     }
+  };
+
+  const handleButtonCommunityClick = () => {
+    navigate("/community");
   };
 
   const handleButtonClick = () => {
@@ -308,7 +310,18 @@ export const Home: React.FC = () => {
         >
           <Flex justifyContent={"space-between"} alignItems="center" mb={4}>
             <Link>
-              <FcHome />
+              <Button
+                borderWidth="1px"
+                borderRadius="10px"
+                borderColor="gray.300"
+                padding="2"
+                backgroundColor="white"
+                boxShadow="md"
+                onClick={handleButtonCommunityClick}
+                size={"sm"}
+              >
+                Community
+              </Button>
             </Link>
             <Link>
               <Button
