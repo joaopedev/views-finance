@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import axiosInstance from "../utils/axiosInstance";
 
 export interface UserData {
@@ -94,6 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           updatedUserData.data.conta
         ) {
           const { balance } = updatedUserData.data.conta as UserData;
+          localStorage.setItem("balance", balance.toString());
           setTotalEarnings(balance);
         }
       }
@@ -102,12 +109,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedAuth = localStorage.getItem("isAuthenticated");
+
+    if (storedUser && storedAuth === "true") {
+      setemailLogin(JSON.parse(storedUser));
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const login = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (emailRegex.test(email)) {
       setemailLogin(email);
       setIsAuthenticated(true);
+      localStorage.setItem("isAuthenticated", "true");
       return true;
     } else {
       return false;
@@ -116,6 +134,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     setIsAuthenticated(false);
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("user"); // limpar também o usuário
   };
 
   const updateDailyGoalProgress = () => {
