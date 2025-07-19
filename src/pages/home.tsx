@@ -23,6 +23,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Center,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import image from "../images/logo.jpg";
@@ -45,7 +46,11 @@ export const Home: React.FC = () => {
   const { totalEarnings, email } = state || {};
   const [showParabensModal, setShowParabensModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const linkUrl = process.env.LINK_REFOUND || "https://forms.gle/J83AJcPrmKNkZwbE8";
+  const linkUrl =
+    process.env.LINK_REFOUND || "https://forms.gle/J83AJcPrmKNkZwbE8";
+  const videosRef = React.useRef<HTMLDivElement | null>(null);
+  const [isBelowVideos, setIsBelowVideos] = useState(false);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -70,6 +75,27 @@ export const Home: React.FC = () => {
     };
     fetchUserData();
   }, [email, userData?.balance, updateUserData, totalEarnings, navigate]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsBelowVideos(!entry.isIntersecting);
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    if (videosRef.current) {
+      observer.observe(videosRef.current);
+    }
+
+    return () => {
+      if (videosRef.current) {
+        observer.unobserve(videosRef?.current);
+      }
+    };
+  }, []);
 
   const getUserData = async (
     emailLogin: string | undefined
@@ -248,7 +274,7 @@ export const Home: React.FC = () => {
             </Stack>
           </Box>
         </VStack>
-        <VStack mt={10}>
+        <VStack mt={10} ref={videosRef}>
           <Text fontSize="sm" fontWeight="bold">
             Videos
           </Text>
@@ -268,39 +294,52 @@ export const Home: React.FC = () => {
           </Box>
         </VStack>
       </Box>
-      <Box backgroundColor="black" mt={6} p={4} m={2}>
-        <Flex justifyContent="space-between" alignItems="center" mb={4}>
-          <Link>
-            <FcHome />
-          </Link>
-          <Link>
-          <Button
-            borderWidth="1px"
-            borderRadius="10px"
-            borderColor="gray.300"
-            padding="4"
-            
-            backgroundColor="white"
-            boxShadow="md"
-            onClick={handleButtonClick}
-          >
-            Request Withdrawal
-          </Button>
-          </Link>
-          <Link>
-          <Button
-            borderWidth="1px"
-            borderRadius="10px"
-            borderColor="gray.300"
-            padding="4"
-            backgroundColor="white"
-            boxShadow="md"
-            onClick={handleButtonRefund}
-          >
-            Request your Refund
-          </Button>
-          </Link>
-        </Flex>
+      <Box>
+        <Box
+          borderRadius={6}
+          backgroundColor="black"
+          mt={6}
+          p={4}
+          m={2}
+          zIndex={99}
+          position={isBelowVideos ? "fixed" : "static"}
+          bottom={isBelowVideos ? 0 : "auto"}
+          width="100%"
+        >
+          <Flex justifyContent={"space-between"} alignItems="center" mb={4}>
+            <Link>
+              <FcHome />
+            </Link>
+            <Link>
+              <Button
+                borderWidth="1px"
+                borderRadius="10px"
+                borderColor="gray.300"
+                padding="2"
+                backgroundColor="white"
+                boxShadow="md"
+                onClick={handleButtonClick}
+                size={"sm"}
+              >
+                Request Withdrawal
+              </Button>
+            </Link>
+            <Link>
+              <Button
+                borderWidth="1px"
+                borderRadius="10px"
+                borderColor="gray.300"
+                padding="2"
+                backgroundColor="white"
+                boxShadow="md"
+                onClick={handleButtonRefund}
+                size={"sm"}
+              >
+                Request your Refund
+              </Button>
+            </Link>
+          </Flex>
+        </Box>
       </Box>
     </Box>
   );
