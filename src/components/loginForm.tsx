@@ -17,6 +17,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   OrderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
@@ -42,7 +43,7 @@ export const LoginForm: React.FC = () => {
       if (response.status === 200 && response.data && response.data.conta) {
         const { balance, ganhos_diarios, data_login } = response.data.conta;
 
-        if ((!data_login || data_login >=24) && ganhos_diarios >= 40 ) {
+        if ((!data_login || data_login >= 24) && ganhos_diarios >= 40) {
           await axiosInstance.post("clear-user-data", { email });
           setShowLoginSuccessModal(true);
           return;
@@ -177,7 +178,48 @@ export const LoginForm: React.FC = () => {
             <ModalCloseButton />
             <ModalBody>
               <Text>
-                <OrderedList>{/* List of terms */}</OrderedList>
+                <OrderedList spacing={3}>
+                  <ListItem>
+                    Enter the email address where you made the purchase.
+                  </ListItem>
+                  <ListItem>
+                    Remember that you can only redeem your earnings once per
+                    day. If you try more than once per day, you may lose access.
+                  </ListItem>
+                  <ListItem>New videos will be updated daily.</ListItem>
+                  <ListItem>
+                    Do not speed up the video or skip the screen; you will only
+                    receive the reward after watching the entire video.
+                  </ListItem>
+                  <ListItem>
+                    You cannot share the website with anyone, as only those who
+                    entered the email address for the purchase will receive it.
+                  </ListItem>
+                  <ListItem>
+                    As the days go by, after your first successful withdrawal,
+                    your earnings limit will increase!
+                  </ListItem>
+                  <ListItem>
+                    You can only withdraw when you reach $1,500 on the platform,
+                    so watch every day to complete the withdrawal as quickly as
+                    possible.
+                  </ListItem>
+                  <ListItem>
+                    Once you complete the daily task, you can log in the next
+                    day.
+                  </ListItem>
+                  <ListItem>
+                    If you wish to receive a refund, there is a form at the
+                    bottom of the app; please fill it out carefully.
+                  </ListItem>
+                  <ListItem>
+                    If you have any questions, please contact support at{" "}
+                    <strong>matheusfraser@gmail.com</strong>.
+                  </ListItem>
+                  <ListItem>
+                    You can access our community, available within the app.
+                  </ListItem>
+                </OrderedList>
               </Text>
             </ModalBody>
             <ModalFooter>
