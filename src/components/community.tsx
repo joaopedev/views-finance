@@ -4,7 +4,7 @@ import { CheckCircleIcon } from "@chakra-ui/icons";
 
 export const CommunityPage: React.FC = () => {
   const handleAccessClick = () => {
-    window.location.href = "https://global.mundpay.com/h4tz8"; // Altere para seu link real
+    window.location.href = "https://go.perfectpay.com.br/PPU38CPUMB6/?utm_source=comunidade"; // Altere para seu link real
   };
 
   return (
